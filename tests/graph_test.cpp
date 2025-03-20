@@ -16,3 +16,25 @@ TEST(GraphTests, countEdges) {
 
     ASSERT_EQ(graph.countEdges(), 1);
 }
+
+TEST(GraphTests, countBidirectedEdges) {
+    int nodes = 3*3;
+    Graph graph(nodes, nodes*6);
+
+    graph.bidirectedConnect(0, 1);
+    graph.bidirectedConnect(1, 2);
+    graph.bidirectedConnect(2, 0);
+
+    ASSERT_EQ(graph.countEdges(), 6);
+}
+
+TEST(GraphTests, countDirectedEdges) {
+    int nodes = 3*3;
+    Graph graph(nodes, nodes*6);
+
+    graph.directedConnect(0, 1);
+    graph.directedConnect(1, 2);
+    graph.directedConnect(2, 0);
+
+    ASSERT_EQ(graph.countEdges(), 3);
+}

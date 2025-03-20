@@ -60,6 +60,28 @@ void Graph::connect(int from, int to, bool bidirectional)
 }
 
 /**
+ * Connects two nodes with a bidirected edge.
+ *
+ * @param from The source node of the connection.
+ * @param to The target node of the connection.
+ */
+void Graph::bidirectedConnect(int from, int to)
+{
+    connect(from, to, true);
+}
+
+/**
+ * Connects two nodes with a directed edge.
+ *
+ * @param from The source node of the connection.
+ * @param to The target node of the connection.
+ */
+void Graph::directedConnect(int from, int to)
+{
+    connect(from, to, false);
+}
+
+/**
  * Check if two nodes are connected.
  *
  * @param from The source node of the connection.
@@ -94,6 +116,8 @@ int Graph::countNodes() const
 
 /**
  * Get the number of edges.
+ *
+ * Bidirected edges are counted as two directed edges.
  *
  * @return Number of edges.
  */

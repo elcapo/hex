@@ -81,6 +81,22 @@ public:
     void connect(int from, int to, bool bidirectional = true);
 
     /**
+     * Connects two nodes with a bidirected edge.
+     *
+     * @param from The source node of the connection.
+     * @param to The target node of the connection.
+     */
+    void bidirectedConnect(int from, int to);
+
+    /**
+     * Connects two nodes with a directed edge.
+     *
+     * @param from The source node of the connection.
+     * @param to The target node of the connection.
+     */
+    void directedConnect(int from, int to);
+
+    /**
      * Check if two nodes are connected.
      *
      * @param from The source node of the connection.
@@ -99,6 +115,8 @@ public:
 
     /**
      * Get the number of edges.
+     *
+     * Bidirected edges are counted as two directed edges.
      *
      * @return Number of edges.
      */
