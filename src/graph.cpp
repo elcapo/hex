@@ -129,7 +129,7 @@ int Graph::countEdges() const
 /**
  * Iterate each of the edges of a given node calling a callback.
  */
-void Graph::forEachEdgeFrom(int node, std::function<void(const Edge&)> callback)
+void Graph::forEachEdgeFrom(int node, std::function<void(const Edge&)> callback) const
 {
     for (int edge = limits[node].head; edge != -1; edge = connections[edge].next) {
         callback(Edge(node, connections[edge].target));
@@ -139,9 +139,22 @@ void Graph::forEachEdgeFrom(int node, std::function<void(const Edge&)> callback)
 /**
  * Iterate each of the edges of the graph calling a callback.
  */
-void Graph::forEachEdge(std::function<void(const Edge&)> callback)
+void Graph::forEachEdge(std::function<void(const Edge&)> callback) const
 {
     for (int node = 0; node < nodes; ++node) {
         forEachEdgeFrom(node, callback);
     }
+}
+
+/**
+ * Override the << operator in order to facilitate streaming the
+ * board over a standard output
+ */
+std::ostream& operator<<(std::ostream& os, const Graph& graph)
+{
+    graph.forEachEdge([&os](const Edge& edge) {
+        os << "(" << edge.from << ") > (" << edge.to << ")" << std::endl;
+    });
+
+    return os;
 }

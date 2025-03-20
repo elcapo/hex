@@ -16,7 +16,7 @@ private:
     // The graph that represents cells and their connections
     Graph graph;
 public:
-    Board(int size) : size(size), graph(size * size)
+    Board(int size) : size(size), graph(size*size, size*size*6)
     {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {

@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "graph.hpp"
-// #include "board.hpp"
+#include "board.hpp"
 
 static int allocations = 0;
 
@@ -14,19 +14,10 @@ void* operator new(size_t size)
 
 int main()
 {
-    int nodes = 3*3;
-    Graph graph(nodes, nodes*6);
-    graph.connect(1, 2);
-    graph.connect(1, 3);
-    graph.connect(1, 4);
-    graph.connect(3, 1);
+    Board board(3);
+    const Graph& graph = board.getGraph();
 
-    std::cout << "Nodes: " << graph.countNodes() << std::endl;
-    std::cout << "Edges: " << graph.countEdges() << std::endl;
-
-    graph.forEachEdge([](const Edge& edge) {
-        std::cout << "> Edge from: " << edge.from << " to: " << edge.to << std::endl;
-    });
-
+    std::cout << "Nodes: " << graph.countNodes() << " / Edges: " << graph.countEdges() << std::endl << std::endl;
+    std::cout << graph << std::endl;
     std::cout << "Allocations: " << allocations << std::endl;
 }

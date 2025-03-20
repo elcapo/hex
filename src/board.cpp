@@ -56,15 +56,15 @@ const Graph& Board::getGraph() const {
 std::ostream& operator<<(std::ostream& os, const Board& board)
 {
     const Graph& graph = board.getGraph();
-    const int nodes = graph.getNodes();
+    const int nodes = graph.countNodes();
     const int size = static_cast<int>(sqrt(nodes));
 
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
-            std::cout << "·";
+            os << ".";
         }
 
-        std::cout << std::endl;
+        os << std::endl;
     }
 
     return os;

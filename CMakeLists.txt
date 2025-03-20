@@ -5,9 +5,7 @@ project(Hex LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-
-enable_testing()
+include(CTest)
 
 add_subdirectory(src)
 add_subdirectory(tests)

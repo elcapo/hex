@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdexcept>
 #include <functional>
+#include <ostream>
 
 /**
  * The Edge struct is used to model the connections of the graph
@@ -125,12 +126,18 @@ public:
     /**
      * Iterate each of the edges of a given node calling a callback.
      */
-    void forEachEdgeFrom(int node, std::function<void(const Edge&)> callback);
+    void forEachEdgeFrom(int node, std::function<void(const Edge&)> callback) const;
 
     /**
      * Iterate each of the edges of the graph calling a callback.
      */
-    void forEachEdge(std::function<void(const Edge&)> callback);
+    void forEachEdge(std::function<void(const Edge&)> callback) const;
+
+    /**
+     * Override the << operator in order to facilitate streaming the
+     * graph over a standard output
+     */
+    friend std::ostream& operator<<(std::ostream& os, const Graph& graph);
 };
 
 #endif // GRAPH_H

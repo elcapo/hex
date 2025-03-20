@@ -1,3 +1,6 @@
+#ifndef __GRAPH_TEST__
+#define __GRAPH_TEST__
+
 #include <gtest/gtest.h>
 #include "../src/graph.cpp"
 
@@ -38,3 +41,5 @@ TEST(GraphTests, countDirectedEdges) {
 
     ASSERT_EQ(graph.countEdges(), 3);
 }
+
+#endif
