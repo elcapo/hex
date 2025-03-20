@@ -3,6 +3,18 @@
 #include "board.hpp"
 
 /**
+ * Passes the turn to the next player
+ */
+void Board::next()
+{
+    if (turn == Turn::Blue) {
+        turn = Turn::Red;
+    } else {
+        turn = Turn::Blue;
+    }
+}
+
+/**
  * Checks if a cell exists by its row and column numbers.
  *
  * Both the row and the column number are expected to be
@@ -26,18 +38,74 @@ bool Board::exists(int row, int col)
  * @param col The column number.
  *
  * @return A number for each cell in a range from 0 to size-1.
+ *         Also can return -1, if the cell does not exist.
  */
 int Board::cell(int row, int col)
 {
-    if (row < 0 || row > size) {
-        throw std::invalid_argument("Can't determine a cell number due to an invalid row number");
-    }
-
-    if (col < 0 || col > size) {
-        throw std::invalid_argument("Can't determine a cell number due to an invalid column number");
+    if (! exists(row, col)) {
+        return -1;
     }
 
     return row * size + col;
+}
+
+/**
+ * Get the color of the current turn.
+ *
+ * @return The color of the current turn.
+ */
+Turn Board::current()
+{
+    return turn;
+}
+
+/**
+ * Set the given cell with the color of the current player.
+ */
+void Board::set(int row, int col)
+{
+    if (pieces.count({row, col}) > 0 && pieces[{row, col}] != Turn::Undecided) {
+        throw std::invalid_argument("The cell has already been chosen");
+    }
+
+    if (pieces.size() == 0) {
+        opening = {row, col};
+    }
+
+    pieces[{row, col}] = turn;
+    next();
+}
+
+/**
+ * Get the color of a given cell.
+ *
+ * @return The color of the cell.
+ */
+Turn Board::get(int row, int col)
+{
+    if (! exists(row, col)) {
+        return Turn::Undecided;
+    }
+
+    return pieces[{row, col}];
+}
+
+/**
+ * Apply the pie rule after the first movement, changing the color
+ * of the first piece and passing the turn.
+ */
+void Board::pieRule()
+{
+    if (pieces.size() != 1) {
+        throw std::invalid_argument("The pie rule can only be invoked right after the first move");
+    }
+
+    if (turn != Turn::Red) {
+        throw std::invalid_argument("The pie rule can only be invoked by the red player after a blue opening");
+    }
+
+    pieces[opening] = turn;
+    next();
 }
 
 /**
@@ -51,7 +119,7 @@ const Graph& Board::getGraph() const {
 
 /**
  * Override the << operator in order to facilitate streaming the
- * board over a standard output
+ * board over a standard output.
  */
 std::ostream& operator<<(std::ostream& os, const Board& board)
 {

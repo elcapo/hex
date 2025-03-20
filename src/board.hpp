@@ -4,6 +4,42 @@
 #include "graph.hpp"
 
 /**
+ * The `Turn` enum contains the possible colors for each player.
+ */
+enum Turn { Undecided = 0, Blue = 1, Red = 2 };
+
+/**
+ * Custom hash function for int.
+ */
+struct IntHash {
+    size_t operator()(int n) const noexcept {
+        return static_cast<size_t>(n);
+    }
+};
+
+/**
+ * Custom hash function for std::pair<int, int>.
+ */
+struct PairHash {
+    template<typename T1, typename T2>
+    size_t operator()(const std::pair<T1, T2>& p) const noexcept {
+        auto h1 = IntHash{}(p.first);
+        auto h2 = IntHash{}(p.second);
+        return h1 ^ (h2 << 1);
+    }
+};
+
+/**
+ * The `Position` type is used to store a reference to a cell.
+ */
+typedef std::pair<int, int> Position;
+
+/**
+ * The `Pieces` type is used to store the positions of the pieces in the board.
+ */
+typedef std::unordered_map<Position, Turn, PairHash> Pieces;
+
+/**
  * The `Board` class models a board for the Hex game by implementing
  * it as a graph.
  */
@@ -13,10 +49,24 @@ private:
     // The number of rows and also the number of columns
     int size;
 
+    // The color of the player that will do the next move
+    Turn turn;
+
+    // The opening position of the match
+    Position opening;
+
     // The graph that represents cells and their connections
     Graph graph;
+
+    // The piece positions at a given moment
+    Pieces pieces;
+
+    /**
+     * Passes the turn to the next player
+     */
+    void next();
 public:
-    Board(int size) : size(size), graph(size*size, size*size*6)
+    Board(int size) : size(size), turn(Turn::Blue), opening({-1, -1}), graph(size*size, size*size*6)
     {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -59,8 +109,30 @@ public:
      * @param col The column number.
      *
      * @return A number for each cell in a range from 0 to size-1.
+     *         Also can return -1, if the cell does not exist.
      */
     int cell(int row, int col);
+
+    /**
+     * Get the color of the current turn.
+     */
+    Turn current();
+
+    /**
+     * Set the given cell with the color of the current player.
+     */
+    void set(int row, int col);
+
+    /**
+     * Get the color of a given cell.
+     */
+    Turn get(int row, int col);
+
+    /**
+     * Apply the pie rule after the first movement, changing the color
+     * of the first piece and passing the turn.
+     */
+    void pieRule();
 
     /**
      * Get a read only version of the graph.
@@ -71,7 +143,7 @@ public:
 
     /**
      * Override the << operator in order to facilitate streaming the
-     * board over a standard output
+     * board over a standard output.
      */
     friend std::ostream& operator<<(std::ostream& os, const Board& board);
 };
