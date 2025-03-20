@@ -135,7 +135,7 @@ public:
 
     /**
      * Override the << operator in order to facilitate streaming the
-     * graph over a standard output
+     * graph over a standard output.
      */
     friend std::ostream& operator<<(std::ostream& os, const Graph& graph);
 };

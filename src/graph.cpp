@@ -148,7 +148,7 @@ void Graph::forEachEdge(std::function<void(const Edge&)> callback) const
 
 /**
  * Override the << operator in order to facilitate streaming the
- * board over a standard output
+ * board over a standard output.
  */
 std::ostream& operator<<(std::ostream& os, const Graph& graph)
 {
