@@ -3,6 +3,24 @@
 #include "board.hpp"
 
 /**
+ * Get a given turn as a single character.
+ *
+ * @return 'B' for Turn::Blue
+ *         'R' for Turn::Red
+ *         '·' otherwise
+ */
+char turnAsChar(Turn t) {
+    switch (t) {
+        case Blue:
+            return 'B';
+        case Red:
+            return 'R';
+        default:
+            return 'o';
+    }
+}
+
+/**
  * Passes the turn to the next player
  */
 void Board::next()
@@ -27,7 +45,7 @@ void Board::next()
  *
  * @return Whether the cell exists or not.
  */
-bool Board::exists(int row, int col)
+bool Board::exists(int row, int col) const
 {
     return row >= 0 && row < size && col >= 0 && col < size;
 }
@@ -42,7 +60,7 @@ bool Board::exists(int row, int col)
  * @return A number for each cell in a range from 0 to size-1.
  *         Also can return -1, if the cell does not exist.
  */
-int Board::cell(int row, int col)
+int Board::cell(int row, int col) const
 {
     if (! exists(row, col)) {
         return -1;
@@ -56,9 +74,19 @@ int Board::cell(int row, int col)
  *
  * @return The color of the current turn.
  */
-Turn Board::current()
+Turn Board::current() const
 {
     return turn;
+}
+
+/**
+ * Get the number of movements that have been played.
+ *
+ * @return Number of movements.
+ */
+int Board::countMovements() const
+{
+    return movements;
 }
 
 /**
@@ -85,7 +113,7 @@ void Board::set(int row, int col)
  *
  * @return The color of the cell.
  */
-Turn Board::get(int row, int col)
+Turn Board::get(int row, int col) const
 {
     if (! exists(row, col)) {
         return Turn::Undecided;
@@ -136,10 +164,12 @@ std::ostream& operator<<(std::ostream& os, const Board& board)
         os << std::string(row * 2, ' ');
 
         for (int col = 0; col < size; col++) {
+            Turn piece = board.get(row, col);
+
             if (col + 1 < size)
-                os << ". - ";
+                os << turnAsChar(piece) << " - ";
             else
-                os << ".";
+                os << turnAsChar(piece);
         }
 
         os << std::endl;

@@ -10,6 +10,15 @@
 enum Turn { Undecided = 0, Blue = 1, Red = 2 };
 
 /**
+ * Get a given turn as a single character.
+ *
+ * @return 'B' for Turn::Blue
+ *         'R' for Turn::Red
+ *         '·' otherwise
+ */
+char turnAsChar(Turn t);
+
+/**
  * Custom hash function for int.
  */
 struct IntHash {
@@ -126,7 +135,7 @@ public:
      *
      * @return Whether the cell exists or not.
      */
-    bool exists(int row, int col);
+    bool exists(int row, int col) const;
 
     /**
      * Obtain the number of a cell counting from its top left
@@ -138,12 +147,19 @@ public:
      * @return A number for each cell in a range from 0 to size-1.
      *         Also can return -1, if the cell does not exist.
      */
-    int cell(int row, int col);
+    int cell(int row, int col) const;
 
     /**
      * Get the color of the current turn.
      */
-    Turn current();
+    Turn current() const;
+
+    /**
+     * Get the number of movements that have been played.
+     *
+     * @return Number of movements.
+     */
+    int countMovements() const;
 
     /**
      * Set the given cell with the color of the current player.
@@ -153,7 +169,7 @@ public:
     /**
      * Get the color of a given cell.
      */
-    Turn get(int row, int col);
+    Turn get(int row, int col) const;
 
     /**
      * Apply the pie rule after the first movement, changing the color

@@ -18,10 +18,17 @@ int main()
     const Graph& graph = board.getGraph();
 
     board.set(1, 1);
+    board.pieRule();
     board.set(2, 1);
-    //board.set(2, 2);
+    board.set(2, 2);
 
-    std::cout << "Nodes: " << graph.countNodes() << " / Edges: " << graph.countEdges() << std::endl << std::endl;
+    std::cout << "Nodes: " << graph.countNodes() << " / ";
+    std::cout << "Edges: " << graph.countEdges() << " / ";
+    std::cout << "Turn: " << turnAsChar(board.current()) << " / ";
+    std::cout << "Movements: " << board.countMovements();
+    std::cout << std::endl << std::endl;
+
     std::cout << board << std::endl;
+
     std::cout << "Allocations: " << allocations << std::endl;
 }
