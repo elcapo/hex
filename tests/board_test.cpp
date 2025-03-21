@@ -2,7 +2,6 @@
 #define __BOARD_TEST__
 
 #include <gtest/gtest.h>
-
 #include "../src/board.cpp"
 
 TEST(BoardTests, exists) {
