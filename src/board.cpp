@@ -12,6 +12,8 @@ void Board::next()
     } else {
         turn = Turn::Blue;
     }
+
+    movements++;
 }
 
 /**
@@ -64,15 +66,17 @@ Turn Board::current()
  */
 void Board::set(int row, int col)
 {
-    if (pieces.count({row, col}) > 0 && pieces[{row, col}] != Turn::Undecided) {
+    Position position = std::make_pair(row, col);
+
+    if (positions[position] != Turn::Undecided) {
         throw std::invalid_argument("The cell has already been chosen");
     }
 
-    if (pieces.size() == 0) {
-        opening = {row, col};
+    if (opening.first == -1 || opening.second == -1) {
+        opening = position;
     }
 
-    pieces[{row, col}] = turn;
+    positions[position] = turn;
     next();
 }
 
@@ -87,7 +91,8 @@ Turn Board::get(int row, int col)
         return Turn::Undecided;
     }
 
-    return pieces[{row, col}];
+    Position position = std::make_pair(row, col);
+    return positions[position];
 }
 
 /**
@@ -96,7 +101,7 @@ Turn Board::get(int row, int col)
  */
 void Board::pieRule()
 {
-    if (pieces.size() != 1) {
+    if (movements != 1) {
         throw std::invalid_argument("The pie rule can only be invoked right after the first move");
     }
 
@@ -104,7 +109,7 @@ void Board::pieRule()
         throw std::invalid_argument("The pie rule can only be invoked by the red player after a blue opening");
     }
 
-    pieces[opening] = turn;
+    positions[opening] = turn;
     next();
 }
 

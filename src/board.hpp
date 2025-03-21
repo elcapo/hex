@@ -36,9 +36,32 @@ struct PairHash {
 typedef std::pair<int, int> Position;
 
 /**
- * The `Pieces` type is used to store the positions of the pieces in the board.
+ * The `Positions` class is used to store the positions of the pieces.
  */
-typedef std::unordered_map<Position, Turn, PairHash> Pieces;
+constexpr int MAX_BOARD_SIZE = 16;
+
+class Positions {
+private:
+    int size;
+    Turn positions[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+
+public:
+    Positions(int size) : size(size) {
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                positions[i][j] = Turn::Undecided;
+            }
+        }
+    }
+
+    Turn& operator[](const Position& position) {
+        return positions[position.first][position.second];
+    }
+
+    const Turn& operator[](const Position& position) const {
+        return positions[position.first][position.second];
+    }
+};
 
 /**
  * The `Board` class models a board for the Hex game by implementing
@@ -53,6 +76,9 @@ private:
     // The color of the player that will do the next move
     Turn turn;
 
+    // The number of movements that have been made
+    int movements;
+
     // The opening position of the match
     Position opening;
 
@@ -60,14 +86,14 @@ private:
     Graph graph;
 
     // The piece positions at a given moment
-    Pieces pieces;
+    Positions positions;
 
     /**
      * Passes the turn to the next player
      */
     void next();
 public:
-    Board(int size) : size(size), turn(Turn::Blue), opening({-1, -1}), graph(size*size, size*size*6)
+    Board(int size) : size(size), turn(Turn::Blue), movements(0), opening({-1, -1}), graph(size*size, size*size*6), positions(size)
     {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
