@@ -14,10 +14,10 @@ void* operator new(size_t size)
 
 int main()
 {
-    Board board(3);
+    Board board(7);
     const Graph& graph = board.getGraph();
 
     std::cout << "Nodes: " << graph.countNodes() << " / Edges: " << graph.countEdges() << std::endl << std::endl;
-    std::cout << graph << std::endl;
+    std::cout << board << std::endl;
     std::cout << "Allocations: " << allocations << std::endl;
 }

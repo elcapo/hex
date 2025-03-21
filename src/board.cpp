@@ -128,8 +128,27 @@ std::ostream& operator<<(std::ostream& os, const Board& board)
     const int size = static_cast<int>(sqrt(nodes));
 
     for (int row = 0; row < size; row++) {
+        os << std::string(row * 2, ' ');
+
         for (int col = 0; col < size; col++) {
-            os << ".";
+            if (col + 1 < size)
+                os << ". - ";
+            else
+                os << ".";
+        }
+
+        os << std::endl;
+
+        if (row + 1 == size)
+            break;
+
+        os << std::string(row * 2 + 1, ' ');
+
+        for (int col = 0; col < size; col++) {
+            if (col + 1 < size)
+                os << "\\ / ";
+            else
+                os << "\\";
         }
 
         os << std::endl;
