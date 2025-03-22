@@ -29,8 +29,33 @@ TEST(BoardTests, current) {
     ASSERT_EQ(board.current(), Turn::Red);
 }
 
+TEST(BoardTests, countMovements) {
+    Board board(3);
 
-TEST(BoardTests, setGet) {
+    ASSERT_EQ(board.countMovements(), 0);
+
+    board.set(1, 1);
+
+    ASSERT_EQ(board.countMovements(), 1);
+
+    board.pieRule();
+
+    ASSERT_EQ(board.countMovements(), 2);
+
+    board.set(1, 2);
+
+    ASSERT_EQ(board.countMovements(), 3);
+}
+
+TEST(BoardTests, set) {
+    Board board(3);
+
+    board.set(1, 1);
+
+    ASSERT_EQ(board.get(1, 1), Turn::Blue);
+}
+
+TEST(BoardTests, get) {
     Board board(3);
 
     ASSERT_EQ(board.get(1, 1), Turn::Undecided);
