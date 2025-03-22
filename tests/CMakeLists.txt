@@ -1,5 +1,6 @@
 if (BUILD_TESTING)
 
+include(CTest)
 include(FetchContent)
 
 FetchContent_Declare(
