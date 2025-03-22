@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <functional>
 #include <ostream>
+#include <sstream>
 
 /**
  * The Edge struct is used to model the connections of the graph
@@ -132,6 +133,13 @@ public:
      * Iterate each of the edges of the graph calling a callback.
      */
     void forEachEdge(std::function<void(const Edge&)> callback) const;
+
+    /**
+     * Return the graph as a string.
+     *
+     * @return String representation of the graph.
+     */
+    std::string toString() const;
 
     /**
      * Override the << operator in order to facilitate streaming the

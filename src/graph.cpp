@@ -147,14 +147,28 @@ void Graph::forEachEdge(std::function<void(const Edge&)> callback) const
 }
 
 /**
+ * Return the graph as a string.
+ *
+ * @return String representation of the graph.
+ */
+std::string Graph::toString() const
+{
+    std::ostringstream os;
+
+    forEachEdge([&os](const Edge& edge) {
+        os << "(" << edge.from << ") > (" << edge.to << ")" << std::endl;
+    });
+
+    return os.str();
+}
+
+/**
  * Override the << operator in order to facilitate streaming the
  * board over a standard output.
  */
 std::ostream& operator<<(std::ostream& os, const Graph& graph)
 {
-    graph.forEachEdge([&os](const Edge& edge) {
-        os << "(" << edge.from << ") > (" << edge.to << ")" << std::endl;
-    });
+    os << graph.toString();
 
     return os;
 }

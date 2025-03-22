@@ -151,12 +151,15 @@ const Graph& Board::getGraph() const {
 }
 
 /**
- * Override the << operator in order to facilitate streaming the
- * board over a standard output.
+ * Return the board as a string.
+ *
+ * @return String representation of the board.
  */
-std::ostream& operator<<(std::ostream& os, const Board& board)
+std::string Board::toString() const
 {
-    const Graph& graph = board.getGraph();
+    std::ostringstream os;
+
+    const Graph& graph = getGraph();
     const int nodes = graph.countNodes();
     const int size = static_cast<int>(sqrt(nodes));
 
@@ -164,7 +167,7 @@ std::ostream& operator<<(std::ostream& os, const Board& board)
         os << std::string(row * 2, ' ');
 
         for (int col = 0; col < size; col++) {
-            Turn piece = board.get(row, col);
+            Turn piece = get(row, col);
 
             if (col + 1 < size)
                 os << turnAsChar(piece) << " - ";
@@ -172,7 +175,7 @@ std::ostream& operator<<(std::ostream& os, const Board& board)
                 os << turnAsChar(piece);
         }
 
-        os << std::endl;
+        os << "\n";
 
         if (row + 1 == size)
             break;
@@ -186,8 +189,19 @@ std::ostream& operator<<(std::ostream& os, const Board& board)
                 os << "\\";
         }
 
-        os << std::endl;
+        os << "\n";
     }
+
+    return os.str();
+}
+
+/**
+ * Override the << operator in order to facilitate streaming the
+ * board over a standard output.
+ */
+std::ostream& operator<<(std::ostream& os, const Board& board)
+{
+    os << board.toString();
 
     return os;
 }

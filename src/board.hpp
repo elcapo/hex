@@ -185,6 +185,13 @@ public:
     const Graph& getGraph() const;
 
     /**
+     * Return the board as a string.
+     *
+     * @return String representation of the board.
+     */
+    std::string toString() const;
+
+    /**
      * Override the << operator in order to facilitate streaming the
      * board over a standard output.
      */
