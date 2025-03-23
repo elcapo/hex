@@ -5,11 +5,25 @@
 #include "graph.hpp"
 #include "board.hpp"
 
-constexpr int BOARD_SIZE = 7;
+/**
+ * The `BOARD_SIZE` constant represents the size of the board.
+ *
+ * @example If set to 11, the board will have 11 rows and 11 columns.
+ */
+constexpr int BOARD_SIZE = 11;
+
+/**
+ * Row and column of the window where the starting (top left)
+ * part of the board will be anchored. This is not meant to be
+ * a configurable parameter.
+ */
 constexpr int BOARD_START_ROW = 3;
 constexpr int BOARD_START_COL = 3;
-constexpr int KEY_ESCAPE = 27;
 
+/**
+ * We use `allocations` to track the number of allocations
+ * made while building the program.
+ */
 static int allocations = 0;
 
 void* operator new(size_t size)
@@ -48,17 +62,23 @@ int main()
     WINDOW* win = newwin(0, 0, 0, 0);
 
     do {
+        int height = LINES;
+        int width = COLS;
+
+        // Print the window
         refresh();
 
         box(win, 0, 0);
         mvwprintw(win, 0, 2, "Hex");
-        mvwprintw(win, 1, 2, "Turn %s / Movements %d",
+        mvwprintw(win, 1, 2, "Turn %s / Movements %d / Row %2d, Col %2d",
             turnAsLabel(board.current()).c_str(),
-            board.countMovements()
+            board.countMovements(),
+            row + 1,
+            col + 1
         );
+        mvwprintw(win, LINES-2, 2, "Press `q` to quit. Use the `arrows` to move the cursor. Use `space` to make a movement.");
 
         renderBoard(win, board);
-        mvwprintw(win, 1, 40, "Row %d, Col %d", row, col);
 
         // Print the cursor
         move(BOARD_START_ROW + row*2, BOARD_START_COL + col*4 + row*2);
@@ -68,7 +88,7 @@ int main()
         // Manage key strokes
         key = getch();
 
-        if (key == KEY_ESCAPE) {
+        if (key == 'q') {
             exit = true;
         } else if (key == KEY_LEFT) {
             if (col > 0)
