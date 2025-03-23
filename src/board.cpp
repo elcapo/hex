@@ -9,7 +9,7 @@
  *         'R' for Turn::Red
  *         '·' otherwise
  */
-char turnAsChar(Turn t)
+char turnAsChar(const Turn& t)
 {
     switch (t) {
         case Blue:
@@ -28,7 +28,7 @@ char turnAsChar(Turn t)
  *         'Red' for Turn::Red
  *         'Undecided' for Turn::Undecided
  */
-std::string turnAsLabel(Turn t)
+std::string turnAsLabel(const Turn& t)
 {
     switch (t) {
         case Blue:

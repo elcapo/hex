@@ -16,7 +16,7 @@ enum Turn { Undecided = 0, Blue = 1, Red = 2 };
  *         'R' for Turn::Red
  *         '·' otherwise
  */
-char turnAsChar(Turn t);
+char turnAsChar(const Turn& t);
 
 /**
  * Get a given turn as a printable label.
@@ -25,7 +25,7 @@ char turnAsChar(Turn t);
  *         'Red' for Turn::Red
  *         'Undecided' for Turn::Undecided
  */
-std::string turnAsLabel(Turn t);
+std::string turnAsLabel(const Turn& t);
 
 /**
  * Custom hash function for int.
