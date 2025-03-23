@@ -110,5 +110,6 @@ int main()
         }    
     } while(! exit);
 
+    delwin(win);
     endwin();
 }
