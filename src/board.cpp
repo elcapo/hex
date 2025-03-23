@@ -133,12 +133,8 @@ void Board::set(int row, int col)
  *
  * @return The color of the cell.
  */
-Turn Board::get(int row, int col) const
+const Turn& Board::get(int row, int col) const
 {
-    if (! exists(row, col)) {
-        return Turn::Undecided;
-    }
-
     Position position = std::make_pair(row, col);
     return positions[position];
 }

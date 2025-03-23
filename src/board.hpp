@@ -178,7 +178,7 @@ public:
     /**
      * Get the color of a given cell.
      */
-    Turn get(int row, int col) const;
+    const Turn& get(int row, int col) const;
 
     /**
      * Apply the pie rule after the first movement, changing the color
