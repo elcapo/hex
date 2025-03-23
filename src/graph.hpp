@@ -113,7 +113,7 @@ public:
      *
      * @return Number of nodes.
      */
-    int countNodes() const;
+    const int& countNodes() const;
 
     /**
      * Get the number of edges.
@@ -122,7 +122,7 @@ public:
      *
      * @return Number of edges.
      */
-    int countEdges() const;
+    const int countEdges() const;
 
     /**
      * Iterate each of the edges of a given node calling a callback.

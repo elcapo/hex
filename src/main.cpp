@@ -34,14 +34,12 @@ void* operator new(size_t size)
 
 void renderBoard(WINDOW* win, Board& board)
 {
-    std::string render = board.toString();
-    std::istringstream renderStream(render);
-
     int row = BOARD_START_ROW;
-    for (std::string line; std::getline(renderStream, line);) {
-        mvwprintw(win, row, BOARD_START_COL, "%s", line.c_str());
+
+    board.forEachLine([win, &row](const char* line) {
+        mvwprintw(win, row, BOARD_START_COL, "%s", line);
         row++;
-    }
+    });
 }
 
 int main()
@@ -70,12 +68,15 @@ int main()
 
         box(win, 0, 0);
         mvwprintw(win, 0, 2, "Hex");
+
         mvwprintw(win, 1, 2, "Turn %s / Movements %d / Row %2d, Col %2d",
             turnAsLabel(board.current()).c_str(),
             board.countMovements(),
             row + 1,
             col + 1
         );
+
+        mvwprintw(win, LINES-3, 2, "Allocations %d", allocations);
         mvwprintw(win, LINES-2, 2, "Press `q` to quit. Use the `arrows` to move the cursor. Use `space` to make a movement.");
 
         renderBoard(win, board);

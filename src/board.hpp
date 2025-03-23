@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include <string>
+#include <cstring>
 #include "graph.hpp"
 
 /**
@@ -16,7 +17,7 @@ enum Turn { Undecided = 0, Blue = 1, Red = 2 };
  *         'R' for Turn::Red
  *         '·' otherwise
  */
-char turnAsChar(const Turn& t);
+const char* turnAsChar(const Turn& t);
 
 /**
  * Get a given turn as a printable label.
@@ -161,14 +162,14 @@ public:
     /**
      * Get the color of the current turn.
      */
-    Turn current() const;
+    const Turn& current() const;
 
     /**
      * Get the number of movements that have been played.
      *
      * @return Number of movements.
      */
-    int countMovements() const;
+    const int& countMovements() const;
 
     /**
      * Set the given cell with the color of the current player.
@@ -193,12 +194,7 @@ public:
      */
     const Graph& getGraph() const;
 
-    /**
-     * Return the board as a string.
-     *
-     * @return String representation of the board.
-     */
-    std::string toString() const;
+    void forEachLine(std::function<void(const char* line)> callback) const;
 
     /**
      * Override the << operator in order to facilitate streaming the

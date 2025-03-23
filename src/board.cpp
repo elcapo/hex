@@ -9,15 +9,15 @@
  *         'R' for Turn::Red
  *         '·' otherwise
  */
-char turnAsChar(const Turn& t)
+const char* turnAsChar(const Turn& t)
 {
     switch (t) {
         case Blue:
-            return 'B';
+            return "B";
         case Red:
-            return 'R';
+            return "R";
         default:
-            return 'o';
+            return "o";
     }
 }
 
@@ -94,7 +94,7 @@ int Board::cell(int row, int col) const
  *
  * @return The color of the current turn.
  */
-Turn Board::current() const
+const Turn& Board::current() const
 {
     return turn;
 }
@@ -104,7 +104,7 @@ Turn Board::current() const
  *
  * @return Number of movements.
  */
-int Board::countMovements() const
+const int& Board::countMovements() const
 {
     return movements;
 }
@@ -166,49 +166,65 @@ const Graph& Board::getGraph() const {
     return graph;
 }
 
-/**
- * Return the board as a string.
- *
- * @return String representation of the board.
- */
-std::string Board::toString() const
+void Board::forEachLine(std::function<void(const char* line)> callback) const
 {
-    std::ostringstream os;
-
     const Graph& graph = getGraph();
-    const int nodes = graph.countNodes();
+    const int& nodes = graph.countNodes();
     const int size = static_cast<int>(sqrt(nodes));
+    char line[128] = "";
+    Turn piece;
 
     for (int row = 0; row < size; row++) {
-        os << std::string(row * 2, ' ');
+        memset(line, 0, sizeof(line));
 
-        for (int col = 0; col < size; col++) {
-            Turn piece = get(row, col);
-
-            if (col + 1 < size)
-                os << turnAsChar(piece) << " - ";
-            else
-                os << turnAsChar(piece);
+        for (int i = 0; i < row * 2; i++) {
+            line[i] = ' ';
         }
 
-        os << "\n";
+        int pos = row * 2;
+
+        for (int col = 0; col < size; col++) {
+            piece = get(row, col);
+
+            line[pos++] = *turnAsChar(piece);
+            
+            if (col + 1 < size) {
+                line[pos++] = ' ';
+                line[pos++] = '-';
+                line[pos++] = ' ';
+            }
+        }
+
+        line[pos++] = '\n';
+        line[pos] = '\0';
+        callback(line);
 
         if (row + 1 == size)
             break;
 
-        os << std::string(row * 2 + 1, ' ');
+        memset(line, 0, sizeof(line));
+
+        for (int i = 0; i < row * 2 + 1; i++) {
+            line[i] = ' ';
+        }
+        
+        pos = row * 2 + 1;
 
         for (int col = 0; col < size; col++) {
-            if (col + 1 < size)
-                os << "\\ / ";
-            else
-                os << "\\";
+            line[pos++] = '\\';
+            
+            if (col + 1 < size) {
+                line[pos++] = ' ';
+                line[pos++] = '/';
+                line[pos++] = ' ';
+            }
         }
 
-        os << "\n";
+        line[pos++] = '\n';
+        line[pos] = '\0';
+        
+        callback(line);
     }
-
-    return os.str();
 }
 
 /**
@@ -217,7 +233,9 @@ std::string Board::toString() const
  */
 std::ostream& operator<<(std::ostream& os, const Board& board)
 {
-    os << board.toString();
+    board.forEachLine([&os](const char* line) {
+        os << line;
+    });
 
     return os;
 }

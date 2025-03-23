@@ -109,7 +109,7 @@ bool Graph::nodesAreConnected(int from, int to)
  *
  * @return Number of nodes.
  */
-int Graph::countNodes() const
+const int& Graph::countNodes() const
 {
     return nodes;
 }
@@ -121,7 +121,7 @@ int Graph::countNodes() const
  *
  * @return Number of edges.
  */
-int Graph::countEdges() const
+const int Graph::countEdges() const
 {
     return connections.size();
 }
