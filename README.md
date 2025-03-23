@@ -1,6 +1,6 @@
 # Hex
 
-This program is an implementation I wrote of the Hex game for Ira Pohl's last course of his [Coding for Everyone: C and C++ Specialization](https://www.coursera.org/specializations/coding-for-everyone) in Coursera. It's basically a home assignment I took seriously as it's my first ever C++ program. Although the assignment didn't ask for tests, and it was in principle meant to be submitted in a single file, I decided to structure as a real life project.
+This program is an implementation I wrote of the Hex game for Ira Pohl's last course of his [Coding for Everyone: C and C++ Specialization](https://www.coursera.org/specializations/coding-for-everyone) in Coursera. It's basically a home assignment I took seriously as it's my first ever C++ program. Although the assignment didn't ask for tests and it was in principle meant to be submitted in a single file, I decided to structure it as a real life project.
 
 ## Install
 
