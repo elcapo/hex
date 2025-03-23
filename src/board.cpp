@@ -9,7 +9,8 @@
  *         'R' for Turn::Red
  *         '·' otherwise
  */
-char turnAsChar(Turn t) {
+char turnAsChar(Turn t)
+{
     switch (t) {
         case Blue:
             return 'B';
@@ -17,6 +18,25 @@ char turnAsChar(Turn t) {
             return 'R';
         default:
             return 'o';
+    }
+}
+
+/**
+ * Get a given turn as a printable label.
+ *
+ * @return 'Blue' for Turn::Blue
+ *         'Red' for Turn::Red
+ *         'Undecided' for Turn::Undecided
+ */
+std::string turnAsLabel(Turn t)
+{
+    switch (t) {
+        case Blue:
+            return "Blue";
+        case Red:
+            return "Red";
+        default:
+            return "Undecided";
     }
 }
 
