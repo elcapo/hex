@@ -32,6 +32,10 @@ void* operator new(size_t size)
     return malloc(size);
 }
 
+/**
+ * Render the board in the given window starting at the
+ * position given by BOARD_START_ROW and BOARD_START_COL.
+ */
 void renderBoard(WINDOW* win, Board& board)
 {
     int row = BOARD_START_ROW;
@@ -66,7 +70,6 @@ int main()
         // Print the window
         refresh();
 
-        box(win, 0, 0);
         mvwprintw(win, 0, 2, "Hex");
 
         mvwprintw(win, 1, 2, "Turn %s / Movements %d / Row %2d, Col %2d",
@@ -80,6 +83,7 @@ int main()
         mvwprintw(win, LINES-2, 2, "Press `q` to quit. Use the `arrows` to move the cursor. Use `space` to make a movement.");
 
         renderBoard(win, board);
+        box(win, 0, 0);
 
         // Print the cursor
         move(BOARD_START_ROW + row*2, BOARD_START_COL + col*4 + row*2);
