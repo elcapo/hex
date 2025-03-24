@@ -166,6 +166,11 @@ const Graph& Board::getGraph() const {
     return graph;
 }
 
+/**
+ * Facilitate iterating over the lines of the board
+ * in order to print them or redirect them to the
+ * standard output.
+ */
 void Board::forEachLine(std::function<void(const char* line)> callback) const
 {
     const Graph& graph = getGraph();
