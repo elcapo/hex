@@ -17,8 +17,8 @@ constexpr int BOARD_SIZE = 11;
  * part of the board will be anchored. This is not meant to be
  * a configurable parameter.
  */
-constexpr int BOARD_START_ROW = 3;
-constexpr int BOARD_START_COL = 3;
+constexpr int BOARD_START_ROW = 4;
+constexpr int BOARD_START_COL = 5;
 
 /**
  * We use `allocations` to track the number of allocations
@@ -46,6 +46,101 @@ void renderBoard(WINDOW* win, Board& board)
     });
 }
 
+/**
+ * Get the row number of the screen that corresponds
+ * to a given row and column of the board.
+ *
+ * @return Row number.
+ */
+int getY(int row, int col)
+{
+    return BOARD_START_ROW + row*2;
+}
+
+/**
+ * Get the column number of the screen that corresponds
+ * to a given row and column of the board.
+ *
+ * @return Column number.
+ */
+int getX(int row, int col)
+{
+    return BOARD_START_COL + col*4 + row*2;
+}
+
+/**
+ * Print the title of the window.
+ */
+void printTitle(WINDOW* win)
+{
+    mvwprintw(win, 0, 2, " The Zig-Zag Game ");
+}
+
+/**
+ * Print the header of the window.
+ */
+void printHeader(WINDOW* win, Board& board, int& row, int&col)
+{
+    mvwprintw(win, 1, 2,
+        "Board (%dx%d) / Turn %4s / Movements %d / Row %2d, Col %2d / Memory allocations %2d",
+        BOARD_SIZE,
+        BOARD_SIZE,
+        turnAsLabel(board.current()).c_str(),
+        board.countMovements(),
+        row + 1,
+        col + 1,
+        allocations
+    );
+}
+
+/**
+ * Print the footer of the window.
+ */
+void printFooter(WINDOW* win, Board& board)
+{
+    if (board.countMovements() == 1) {
+        mvwprintw(win, LINES-5, 2, "Press `p` to apply the pie rule.");
+    } else {
+        wmove(win, LINES-5, 0);
+        wclrtoeol(win);
+    }
+
+    mvwprintw(win, LINES-4, 2, "Press the `arrows` to move the cursor.");
+    mvwprintw(win, LINES-3, 2, "Press `space` to make a movement.");
+    mvwprintw(win, LINES-2, 2, "Press `q` to quit.");    
+}
+
+/**
+ * Render the marks that indicate which side corresponds to
+ * each player.
+ */
+void renderColorMarkers(WINDOW* win)
+{
+    mvwprintw(win,
+        getY(0, 0) - 1,
+        getX(0, BOARD_SIZE/2),
+        "R"
+    );
+
+    mvwprintw(win,
+        getY(BOARD_SIZE - 1, BOARD_SIZE/2) + 1,
+        getX(BOARD_SIZE - 1, BOARD_SIZE/2),
+        "R"
+    );
+
+    mvwprintw(win,
+        getY(BOARD_SIZE/2, 0),
+        getX(BOARD_SIZE/2, 0) - 2,
+        "B"
+    );
+
+    mvwprintw(win,
+        getY(BOARD_SIZE/2, 0),
+        getX(BOARD_SIZE/2, BOARD_SIZE - 1) + 2,
+        "B"
+    );
+}
+
 int main()
 {
     Board board(BOARD_SIZE);
@@ -60,33 +155,26 @@ int main()
     int key;
     int row = 0;
     int col = 0;
+    int height, width;
 
     WINDOW* win = newwin(0, 0, 0, 0);
 
     do {
-        int height = LINES;
-        int width = COLS;
+        height = LINES;
+        width = COLS;
 
         // Print the window
         refresh();
 
-        mvwprintw(win, 0, 2, "Hex");
-
-        mvwprintw(win, 1, 2, "Turn %s / Movements %d / Row %2d, Col %2d",
-            turnAsLabel(board.current()).c_str(),
-            board.countMovements(),
-            row + 1,
-            col + 1
-        );
-
-        mvwprintw(win, LINES-3, 2, "Allocations %d", allocations);
-        mvwprintw(win, LINES-2, 2, "Press `q` to quit. Use the `arrows` to move the cursor. Use `space` to make a movement.");
-
+        printHeader(win, board, row, col);
         renderBoard(win, board);
+        renderColorMarkers(win);
+        printFooter(win, board);
         box(win, 0, 0);
+        printTitle(win);
 
         // Print the cursor
-        move(BOARD_START_ROW + row*2, BOARD_START_COL + col*4 + row*2);
+        move(getY(row, col), getX(row, col));
 
         wrefresh(win);
 
@@ -110,6 +198,9 @@ int main()
         } else if (key == ' ') {
             if (board.get(row, col) == Turn::Undecided)
                 board.set(row, col);
+        } else if (key == 'p') {
+            if (board.countMovements() == 1)
+                board.pieRule();
         }
     } while(! exit);
 
