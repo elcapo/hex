@@ -141,48 +141,56 @@ void renderColorMarkers(WINDOW* win)
     );
 }
 
-int main()
+/**
+ * Initialize the screen.
+ */
+void initialize()
 {
-    Board board(BOARD_SIZE);
-    const Graph& graph = board.getGraph();
-
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, true);
+}
 
-    bool exit = false;
-    int key;
-    int row = 0;
-    int col = 0;
-    int height, width;
+/**
+ * Render the game window.
+ */
+void render(WINDOW* win, Board& board, int& row, int&col)
+{
+    refresh();
+    printHeader(win, board, row, col);
+    renderBoard(win, board);
+    renderColorMarkers(win);
+    printFooter(win, board);
+    box(win, 0, 0);
+    printTitle(win);
+    move(getY(row, col), getX(row, col));
+    wrefresh(win);
+}
 
+int main()
+{
+    Board board(BOARD_SIZE);
+    const Graph& graph = board.getGraph();
     WINDOW* win = newwin(0, 0, 0, 0);
+
+    int key, row, col, height, width;
+
+    row = 0;
+    col = 0;
+
+    initialize();
 
     do {
         height = LINES;
         width = COLS;
 
-        // Print the window
-        refresh();
+        render(win, board, row, col);
 
-        printHeader(win, board, row, col);
-        renderBoard(win, board);
-        renderColorMarkers(win);
-        printFooter(win, board);
-        box(win, 0, 0);
-        printTitle(win);
-
-        // Print the cursor
-        move(getY(row, col), getX(row, col));
-
-        wrefresh(win);
-
-        // Manage key strokes
         key = getch();
 
         if (key == 'q') {
-            exit = true;
+            break;
         } else if (key == KEY_LEFT) {
             if (col > 0)
                 col--;
@@ -202,7 +210,7 @@ int main()
             if (board.countMovements() == 1)
                 board.pieRule();
         }
-    } while(! exit);
+    } while(true);
 
     delwin(win);
     endwin();
