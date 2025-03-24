@@ -107,7 +107,10 @@ int main()
         } else if (key == KEY_DOWN) {
             if (row < BOARD_SIZE - 1)
                 row++;
-        }    
+        } else if (key == ' ') {
+            if (board.get(row, col) == Turn::Undecided)
+                board.set(row, col);
+        }
     } while(! exit);
 
     delwin(win);
