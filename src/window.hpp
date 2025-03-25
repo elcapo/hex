@@ -50,22 +50,6 @@ void endRed(WINDOW* win);
 void renderBoard(WINDOW* win, Board& board);
 
 /**
- * Get the row number of the screen that corresponds
- * to a given row and column of the board.
- *
- * @return Row number.
- */
-int getY(int row, int col);
-
-/**
- * Get the column number of the screen that corresponds
- * to a given row and column of the board.
- *
- * @return Column number.
- */
-int getX(int row, int col);
-
-/**
  * Print the title of the window.
  */
 void printTitle(WINDOW* win);

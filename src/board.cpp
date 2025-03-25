@@ -71,6 +71,28 @@ bool Board::exists(int row, int col) const
 }
 
 /**
+ * Get the row number of the rendered board that corresponds
+ * to a given row and column of the board.
+ *
+ * @return Row number.
+ */
+int Board::getY(int row, int col) const
+{
+    return row*2;
+}
+
+/**
+ * Get the column number of the rendered board that corresponds
+ * to a given row and column of the board.
+ *
+ * @return Column number.
+ */
+int Board::getX(int row, int col) const
+{
+    return col*4 + row*2;
+}
+
+/**
  * Obtain the number of a cell counting from its top left
  * cell, in a first left then down order.
  *

@@ -59,28 +59,6 @@ void renderBoard(WINDOW* win, Board& board)
 }
 
 /**
- * Get the row number of the screen that corresponds
- * to a given row and column of the board.
- *
- * @return Row number.
- */
-int getY(int row, int col)
-{
-    return BOARD_START_ROW + row*2;
-}
-
-/**
- * Get the column number of the screen that corresponds
- * to a given row and column of the board.
- *
- * @return Column number.
- */
-int getX(int row, int col)
-{
-    return BOARD_START_COL + col*4 + row*2;
-}
-
-/**
  * Print the title of the window.
  */
 void printTitle(WINDOW* win)
@@ -126,19 +104,19 @@ void printFooter(WINDOW* win, Board& board)
  * Render the marks that indicate which side corresponds to
  * each player.
  */
-void renderColorMarkers(WINDOW* win)
+void renderColorMarkers(WINDOW* win, Board& board)
 {
     startBlue(win);
 
     mvwprintw(win,
-        getY(BOARD_SIZE/2, 0),
-        getX(BOARD_SIZE/2, 0) - 2,
+        BOARD_START_ROW + board.getY(BOARD_SIZE/2, 0),
+        BOARD_START_COL + board.getX(BOARD_SIZE/2, 0) - 2,
         "B"
     );
 
     mvwprintw(win,
-        getY(BOARD_SIZE/2, 0),
-        getX(BOARD_SIZE/2, BOARD_SIZE - 1) + 2,
+        BOARD_START_ROW + board.getY(BOARD_SIZE/2, 0),
+        BOARD_START_COL + board.getX(BOARD_SIZE/2, BOARD_SIZE - 1) + 2,
         "B"
     );
 
@@ -147,14 +125,14 @@ void renderColorMarkers(WINDOW* win)
     startRed(win);
 
     mvwprintw(win,
-        getY(0, 0) - 1,
-        getX(0, BOARD_SIZE/2),
+        BOARD_START_ROW + board.getY(0, 0) - 1,
+        BOARD_START_COL + board.getX(0, BOARD_SIZE/2),
         "R"
     );
 
     mvwprintw(win,
-        getY(BOARD_SIZE - 1, BOARD_SIZE/2) + 1,
-        getX(BOARD_SIZE - 1, BOARD_SIZE/2),
+        BOARD_START_ROW + board.getY(BOARD_SIZE - 1, BOARD_SIZE/2) + 1,
+        BOARD_START_COL + board.getX(BOARD_SIZE - 1, BOARD_SIZE/2),
         "R"
     );
 
@@ -194,11 +172,14 @@ void render(WINDOW* win, Board& board, int& row, int&col)
 
     printHeader(win, board, row, col);
     renderBoard(win, board);
-    renderColorMarkers(win);
+    renderColorMarkers(win, board);
     printFooter(win, board);
     box(win, 0, 0);
     printTitle(win);
-    move(getY(row, col), getX(row, col));
+    move(
+        BOARD_START_ROW + board.getY(row, col),
+        BOARD_START_COL + board.getX(row, col)
+    );
 
     wrefresh(win);
 }

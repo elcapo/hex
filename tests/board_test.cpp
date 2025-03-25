@@ -11,6 +11,26 @@ TEST(BoardTests, exists) {
     ASSERT_EQ(board.exists(9, 9), false);
 }
 
+TEST(BoardTests, getY) {
+    Board board(3);
+
+    ASSERT_EQ(board.getY(0, 0), 0);
+    ASSERT_EQ(board.getY(0, 1), 0);
+    ASSERT_EQ(board.getY(1, 0), 2);
+    ASSERT_EQ(board.getY(1, 1), 2);
+    ASSERT_EQ(board.getY(2, 2), 4);
+}
+
+TEST(BoardTests, getX) {
+    Board board(3);
+
+    ASSERT_EQ(board.getX(0, 0), 0);
+    ASSERT_EQ(board.getX(0, 1), 4);
+    ASSERT_EQ(board.getX(1, 0), 2);
+    ASSERT_EQ(board.getX(1, 1), 6);
+    ASSERT_EQ(board.getX(2, 2), 12);
+}
+
 TEST(BoardTests, cell) {
     Board board(3);
 
