@@ -114,7 +114,7 @@ int Board::cell(int row, int col) const
 /**
  * Get the color of the current turn.
  *
- * @return The color of the current turn.
+ * @return Color of the player that should do the next move.
  */
 const Turn& Board::current() const
 {
@@ -133,6 +133,9 @@ const int& Board::countMovements() const
 
 /**
  * Set the given cell with the color of the current player.
+ *
+ * @param row The row number.
+ * @param col The column number.
  */
 void Board::set(int row, int col)
 {
@@ -152,6 +155,9 @@ void Board::set(int row, int col)
 
 /**
  * Get the color of a given cell.
+ *
+ * @param row The row number.
+ * @param col The column number.
  *
  * @return The color of the cell.
  */
@@ -192,6 +198,9 @@ const Graph& Board::getGraph() const {
  * Facilitate iterating over the lines of the board
  * in order to print them or redirect them to the
  * standard output.
+ *
+ * @param callback Function that will be called back
+ *        with the corresponding line.
  */
 void Board::forEachLine(std::function<void(const char* line)> callback) const
 {

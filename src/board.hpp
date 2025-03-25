@@ -183,6 +183,8 @@ public:
 
     /**
      * Get the color of the current turn.
+     *
+     * @return Color of the player that should do the next move.
      */
     const Turn& current() const;
 
@@ -195,11 +197,17 @@ public:
 
     /**
      * Set the given cell with the color of the current player.
+     *
+     * @param row The row number.
+     * @param col The column number.
      */
     void set(int row, int col);
 
     /**
      * Get the color of a given cell.
+     *
+     * @param row The row number.
+     * @param col The column number.
      */
     const Turn& get(int row, int col) const;
 
@@ -220,6 +228,9 @@ public:
      * Facilitate iterating over the lines of the board
      * in order to print them or redirect them to the
      * standard output.
+     *
+     * @param callback Function that will be called back
+     *        with the corresponding line.
      */
     void forEachLine(std::function<void(const char* line)> callback) const;
 
