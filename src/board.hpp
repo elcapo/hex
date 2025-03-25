@@ -235,6 +235,16 @@ public:
     void forEachLine(std::function<void(const char* line)> callback) const;
 
     /**
+     * Facilitate iterating over the pieces of the board
+     * in order to print them or redirect them to the
+     * standard output.
+     *
+     * @param callback Function that will be called back
+     *        with the corresponding piece.
+     */
+    void forEachPiece(std::function<void(const int row, const int col, Turn turn)> callback) const;
+
+    /**
      * Override the << operator in order to facilitate streaming the
      * board over a standard output.
      */

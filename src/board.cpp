@@ -7,7 +7,7 @@
  *
  * @return 'B' for Turn::Blue
  *         'R' for Turn::Red
- *         '·' otherwise
+ *         'o' otherwise
  */
 const char* turnAsChar(const Turn& t)
 {
@@ -222,7 +222,7 @@ void Board::forEachLine(std::function<void(const char* line)> callback) const
         for (int col = 0; col < size; col++) {
             piece = get(row, col);
 
-            line[pos++] = *turnAsChar(piece);
+            line[pos++] = 'o';
             
             if (col + 1 < size) {
                 line[pos++] = ' ';
@@ -260,6 +260,27 @@ void Board::forEachLine(std::function<void(const char* line)> callback) const
         line[pos] = '\0';
         
         callback(line);
+    }
+}
+
+/**
+ * Facilitate iterating over the pieces of the board
+ * in order to print them or redirect them to the
+ * standard output.
+ *
+ * @param callback Function that will be called back
+ *        with the corresponding piece.
+ */
+void Board::forEachPiece(std::function<void(const int row, const int col, Turn turn)> callback) const
+{
+    Position position;
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            position = std::make_pair(i, j);
+            if (positions[position] != Turn::Undecided)
+                callback(i, j, positions[position]);
+        }
     }
 }
 

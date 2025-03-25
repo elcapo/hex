@@ -100,4 +100,57 @@ TEST(BoardTests, pieRule) {
     ASSERT_EQ(board.current(), Turn::Blue);
 }
 
+TEST(BoardTests, forEachLine)
+{
+    Board board(3);
+
+    int i = 0;
+
+    auto callback = [&i](const char* line) {
+        const char* expectedLines[5] = {
+            "o - o - o",
+            " \\ / \\ / \\",
+            "  o - o - o",
+            "   \\ / \\ / \\",
+            "    o - o - o",
+        };
+
+        ASSERT_EQ(*expectedLines[i], *line);
+
+        i++;
+    };
+
+    board.forEachLine(callback);
+}
+
+TEST(BoardTests, forEachPiece)
+{
+    Board board(3);
+
+    board.set(1, 1);
+    board.pieRule();
+    board.set(2, 1);
+
+    int i = 0;
+
+    struct expectation {
+        int row, col;
+        Turn turn;
+    };
+
+    auto callback = [&i](const int row, const int col, Turn turn) {
+        expectation expectations[2];
+        expectations[0] = {1, 1, Turn::Red};
+        expectations[1] = {2, 1, Turn::Blue};
+
+        ASSERT_EQ(expectations[i].row, row);
+        ASSERT_EQ(expectations[i].col, col);
+        ASSERT_EQ(expectations[i].turn, turn);
+
+        i++;
+    };
+
+    board.forEachPiece(callback);
+}
+
 #endif

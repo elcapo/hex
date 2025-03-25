@@ -50,6 +50,12 @@ void endRed(WINDOW* win);
 void renderBoard(WINDOW* win, Board& board);
 
 /**
+ * Render the pieces of the board in the given window starting at the
+ * position given by BOARD_START_ROW and BOARD_START_COL.
+ */
+void renderPieces(WINDOW* win, Board& board);
+
+/**
  * Print the title of the window.
  */
 void printTitle(WINDOW* win);
