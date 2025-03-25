@@ -172,7 +172,6 @@ int main()
 {
     Board board(BOARD_SIZE);
     const Graph& graph = board.getGraph();
-    WINDOW* win = newwin(0, 0, 0, 0);
 
     int key, row, col, height, width;
 
@@ -180,6 +179,8 @@ int main()
     col = 0;
 
     initialize();
+
+    WINDOW* win = newwin(0, 0, 0, 0);
 
     do {
         height = LINES;
