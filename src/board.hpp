@@ -112,7 +112,13 @@ private:
      */
     void next();
 public:
-    Board(int size) : size(size), turn(Turn::Blue), movements(0), opening({-1, -1}), graph(size*size, size*size*6), positions(size)
+    Board(int size) :
+        size(size),
+        turn(Turn::Blue),
+        movements(0),
+        opening({-1, -1}),
+        graph(size*size, size*size*6),
+        positions(size)
     {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
