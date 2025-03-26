@@ -45,49 +45,6 @@ void endRed(WINDOW* win)
 }
 
 /**
- * Render the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
-void renderBoard(WINDOW* win, Board& board)
-{
-    int row = BOARD_START_ROW;
-
-    board.forEachLine([win, &row](const char* line) {
-        mvwprintw(win, row, BOARD_START_COL, "%s", line);
-        row++;
-    });
-}
-
-/**
- * Render the pieces of the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
-void renderPieces(WINDOW* win, Board& board)
-{
-    board.forEachPiece([&win, &board](const int row, const int col, Turn turn) {
-        if (turn == Turn::Blue) {
-            startBlue(win);
-            mvwprintw(win,
-                BOARD_START_ROW + board.getY(row, col),
-                BOARD_START_COL + board.getX(row, col),
-                "B"
-            );
-            endBlue(win);
-        }
-
-        if (turn == Turn::Red) {
-            startRed(win);
-            mvwprintw(win,
-                BOARD_START_ROW + board.getY(row, col),
-                BOARD_START_COL + board.getX(row, col),
-                "R"
-            );
-            endRed(win);
-        }
-    });
-}
-
-/**
  * Print the title of the window.
  */
 void printTitle(WINDOW* win)
@@ -166,6 +123,49 @@ void renderColorMarkers(WINDOW* win, Board& board)
     );
 
     endRed(win);
+}
+
+/**
+ * Render the board in the given window starting at the
+ * position given by BOARD_START_ROW and BOARD_START_COL.
+ */
+void renderBoard(WINDOW* win, Board& board)
+{
+    int row = BOARD_START_ROW;
+
+    board.forEachLine([win, &row](const char* line) {
+        mvwprintw(win, row, BOARD_START_COL, "%s", line);
+        row++;
+    });
+}
+
+/**
+ * Render the pieces of the board in the given window starting at the
+ * position given by BOARD_START_ROW and BOARD_START_COL.
+ */
+void renderPieces(WINDOW* win, Board& board)
+{
+    board.forEachPiece([&win, &board](const int row, const int col, Turn turn) {
+        if (turn == Turn::Blue) {
+            startBlue(win);
+            mvwprintw(win,
+                BOARD_START_ROW + board.getY(row, col),
+                BOARD_START_COL + board.getX(row, col),
+                "B"
+            );
+            endBlue(win);
+        }
+
+        if (turn == Turn::Red) {
+            startRed(win);
+            mvwprintw(win,
+                BOARD_START_ROW + board.getY(row, col),
+                BOARD_START_COL + board.getX(row, col),
+                "R"
+            );
+            endRed(win);
+        }
+    });
 }
 
 /**

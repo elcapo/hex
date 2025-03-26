@@ -1,3 +1,6 @@
+#ifndef WINDOW_H
+#define WINDOW_H
+
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
@@ -44,18 +47,6 @@ void startRed(WINDOW* win);
 void endRed(WINDOW* win);
 
 /**
- * Render the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
-void renderBoard(WINDOW* win, Board& board);
-
-/**
- * Render the pieces of the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
-void renderPieces(WINDOW* win, Board& board);
-
-/**
  * Print the title of the window.
  */
 void printTitle(WINDOW* win);
@@ -74,7 +65,19 @@ void printFooter(WINDOW* win, Board& board);
  * Render the marks that indicate which side corresponds to
  * each player.
  */
-void renderColorMarkers(WINDOW* win);
+void renderColorMarkers(WINDOW* win, Board& board);
+
+/**
+ * Render the board in the given window starting at the
+ * position given by BOARD_START_ROW and BOARD_START_COL.
+ */
+void renderBoard(WINDOW* win, Board& board);
+
+/**
+ * Render the pieces of the board in the given window starting at the
+ * position given by BOARD_START_ROW and BOARD_START_COL.
+ */
+void renderPieces(WINDOW* win, Board& board);
 
 /**
  * Initialize the screen.
@@ -85,3 +88,5 @@ void initialize();
  * Render the game window.
  */
 void render(WINDOW* win, Board& board, int& row, int&col);
+
+#endif // WINDOW_H
