@@ -205,8 +205,6 @@ void Window::initialize()
  */
 void Window::render(int& row, int&col)
 {
-    //wclear(win);
-
     printHeader(row, col);
     renderBoard();
     renderPieces();
