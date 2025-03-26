@@ -26,67 +26,82 @@ constexpr int BOARD_SIZE = 11;
 constexpr int BOARD_START_ROW = 4;
 constexpr int BOARD_START_COL = 5;
 
-/**
- * Activate the blue color.
- */
-void startBlue(WINDOW* win);
+class Window
+{
+private:
+    WINDOW* win;
+    Board& board;
+public:
+    Window(Board& board) : board(board) {
+        win = nullptr;
+    }
 
-/**
- * Deactivate the blue color.
- */
-void endBlue(WINDOW* win);
+    ~Window() {
+        endwin();
+    }
 
-/**
- * Activate the red color.
- */
-void startRed(WINDOW* win);
+    /**
+     * Activate the blue color.
+     */
+    void startBlue();
 
-/**
- * Deactivate the blue color.
- */
-void endRed(WINDOW* win);
+    /**
+     * Deactivate the blue color.
+     */
+    void endBlue();
 
-/**
- * Print the title of the window.
- */
-void printTitle(WINDOW* win);
+    /**
+     * Activate the red color.
+     */
+    void startRed();
 
-/**
- * Print the header of the window.
- */
-void printHeader(WINDOW* win, Board& board, int& row, int&col);
+    /**
+     * Deactivate the blue color.
+     */
+    void endRed();
 
-/**
- * Print the footer of the window.
- */
-void printFooter(WINDOW* win, Board& board);
+    /**
+     * Print the title of the window.
+     */
+    void printTitle();
 
-/**
- * Render the marks that indicate which side corresponds to
- * each player.
- */
-void renderColorMarkers(WINDOW* win, Board& board);
+    /**
+     * Print the header of the window.
+     */
+    void printHeader(int& row, int&col);
 
-/**
- * Render the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
-void renderBoard(WINDOW* win, Board& board);
+    /**
+     * Print the footer of the window.
+     */
+    void printFooter();
 
-/**
- * Render the pieces of the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
-void renderPieces(WINDOW* win, Board& board);
+    /**
+     * Render the marks that indicate which side corresponds to
+     * each player.
+     */
+    void renderColorMarkers();
 
-/**
- * Initialize the screen.
- */
-void initialize();
+    /**
+     * Render the board in the given window starting at the
+     * position given by BOARD_START_ROW and BOARD_START_COL.
+     */
+    void renderBoard();
 
-/**
- * Render the game window.
- */
-void render(WINDOW* win, Board& board, int& row, int&col);
+    /**
+     * Render the pieces of the board in the given window starting at the
+     * position given by BOARD_START_ROW and BOARD_START_COL.
+     */
+    void renderPieces();
+
+    /**
+     * Initialize the screen.
+     */
+    void initialize();
+
+    /**
+     * Render the game window.
+     */
+    void render(int& row, int&col);
+};
 
 #endif // WINDOW_H

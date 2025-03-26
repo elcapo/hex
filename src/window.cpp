@@ -15,7 +15,7 @@ void* operator new(size_t size)
 /**
  * Activate the blue color.
  */
-void startBlue(WINDOW* win)
+void Window::startBlue()
 {
     wattron(win, COLOR_PAIR(BLUE_PAIR));
 }
@@ -23,7 +23,7 @@ void startBlue(WINDOW* win)
 /**
  * Deactivate the blue color.
  */
-void endBlue(WINDOW* win)
+void Window::endBlue()
 {
     wattroff(win, COLOR_PAIR(BLUE_PAIR));
 }
@@ -31,7 +31,7 @@ void endBlue(WINDOW* win)
 /**
  * Activate the red color.
  */
-void startRed(WINDOW* win)
+void Window::startRed()
 {
     wattron(win, COLOR_PAIR(RED_PAIR));
 }
@@ -39,7 +39,7 @@ void startRed(WINDOW* win)
 /**
  * Deactivate the blue color.
  */
-void endRed(WINDOW* win)
+void Window::endRed()
 {
     wattroff(win, COLOR_PAIR(RED_PAIR));
 }
@@ -47,7 +47,7 @@ void endRed(WINDOW* win)
 /**
  * Print the title of the window.
  */
-void printTitle(WINDOW* win)
+void Window::printTitle()
 {
     mvwprintw(win, 0, 2, " The Zig-Zag Game ");
 }
@@ -55,7 +55,7 @@ void printTitle(WINDOW* win)
 /**
  * Print the header of the window.
  */
-void printHeader(WINDOW* win, Board& board, int& row, int&col)
+void Window::printHeader(int& row, int&col)
 {
     mvwprintw(win, 1, 2,
         "Board (%dx%d) / Turn %4s / Movements %d / Row %2d, Col %2d / Memory allocations %2d",
@@ -72,7 +72,7 @@ void printHeader(WINDOW* win, Board& board, int& row, int&col)
 /**
  * Print the footer of the window.
  */
-void printFooter(WINDOW* win, Board& board)
+void Window::printFooter()
 {
     if (board.countMovements() == 1) {
         mvwprintw(win, LINES-5, 2, "Press `p` to apply the pie rule.");
@@ -90,9 +90,9 @@ void printFooter(WINDOW* win, Board& board)
  * Render the marks that indicate which side corresponds to
  * each player.
  */
-void renderColorMarkers(WINDOW* win, Board& board)
+void Window::renderColorMarkers()
 {
-    startBlue(win);
+    startBlue();
 
     mvwprintw(win,
         BOARD_START_ROW + board.getY(BOARD_SIZE/2, 0),
@@ -106,9 +106,9 @@ void renderColorMarkers(WINDOW* win, Board& board)
         "B"
     );
 
-    endBlue(win);
+    endBlue();
 
-    startRed(win);
+    startRed();
 
     mvwprintw(win,
         BOARD_START_ROW + board.getY(0, 0) - 1,
@@ -122,19 +122,19 @@ void renderColorMarkers(WINDOW* win, Board& board)
         "R"
     );
 
-    endRed(win);
+    endRed();
 }
 
 /**
  * Render the board in the given window starting at the
  * position given by BOARD_START_ROW and BOARD_START_COL.
  */
-void renderBoard(WINDOW* win, Board& board)
+void Window::renderBoard()
 {
     int row = BOARD_START_ROW;
 
-    board.forEachLine([win, &row](const char* line) {
-        mvwprintw(win, row, BOARD_START_COL, "%s", line);
+    board.forEachLine([this, &row](const char* line) {
+        mvwprintw(this->win, row, BOARD_START_COL, "%s", line);
         row++;
     });
 }
@@ -143,27 +143,31 @@ void renderBoard(WINDOW* win, Board& board)
  * Render the pieces of the board in the given window starting at the
  * position given by BOARD_START_ROW and BOARD_START_COL.
  */
-void renderPieces(WINDOW* win, Board& board)
+void Window::renderPieces()
 {
-    board.forEachPiece([&win, &board](const int row, const int col, Turn turn) {
+    board.forEachPiece([this](const int row, const int col, Turn turn) {
         if (turn == Turn::Blue) {
-            startBlue(win);
-            mvwprintw(win,
-                BOARD_START_ROW + board.getY(row, col),
-                BOARD_START_COL + board.getX(row, col),
+            this->startBlue();
+
+            mvwprintw(this->win,
+                BOARD_START_ROW + this->board.getY(row, col),
+                BOARD_START_COL + this->board.getX(row, col),
                 "B"
             );
-            endBlue(win);
+
+            this->endBlue();
         }
 
         if (turn == Turn::Red) {
-            startRed(win);
-            mvwprintw(win,
-                BOARD_START_ROW + board.getY(row, col),
-                BOARD_START_COL + board.getX(row, col),
+            this->startRed();
+
+            mvwprintw(this->win,
+                BOARD_START_ROW + this->board.getY(row, col),
+                BOARD_START_COL + this->board.getX(row, col),
                 "R"
             );
-            endRed(win);
+
+            this->endRed();
         }
     });
 }
@@ -171,16 +175,18 @@ void renderPieces(WINDOW* win, Board& board)
 /**
  * Initialize the screen.
  */
-void initialize()
+void Window::initialize()
 {
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, true);
+    curs_set(1);
+
+    win = stdscr;
 
     if (has_colors()) {
         start_color();
-
         use_default_colors();
 
         init_pair(BASE_PAIR, COLOR_BLACK, COLOR_WHITE);
@@ -190,22 +196,24 @@ void initialize()
         bkgd(COLOR_PAIR(BASE_PAIR));
         clear();
     }
+
+    wrefresh(win);
 }
 
 /**
  * Render the game window.
  */
-void render(WINDOW* win, Board& board, int& row, int&col)
+void Window::render(int& row, int&col)
 {
-    refresh();
+    //wclear(win);
 
-    printHeader(win, board, row, col);
-    renderBoard(win, board);
-    renderPieces(win, board);
-    renderColorMarkers(win, board);
-    printFooter(win, board);
+    printHeader(row, col);
+    renderBoard();
+    renderPieces();
+    renderColorMarkers();
+    printFooter();
     box(win, 0, 0);
-    printTitle(win);
+    printTitle();
     move(
         BOARD_START_ROW + board.getY(row, col),
         BOARD_START_COL + board.getX(row, col)

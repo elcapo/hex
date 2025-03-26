@@ -16,12 +16,11 @@ int main()
     row = 0;
     col = 0;
 
-    initialize();
-
-    WINDOW* win = newwin(0, 0, 0, 0);
+    Window window(board);
+    window.initialize();
 
     do {
-        render(win, board, row, col);
+        window.render(row, col);
 
         key = getch();
 
@@ -47,7 +46,4 @@ int main()
                 board.pieRule();
         }
     } while(true);
-
-    delwin(win);
-    endwin();
 }
