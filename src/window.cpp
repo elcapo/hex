@@ -189,9 +189,9 @@ void Window::initialize()
         start_color();
         use_default_colors();
 
-        init_pair(BASE_PAIR, COLOR_BLACK, COLOR_WHITE);
-        init_pair(BLUE_PAIR, COLOR_BLACK, COLOR_CYAN);
-        init_pair(RED_PAIR, COLOR_BLACK, COLOR_RED);
+        init_pair(BASE_PAIR, COLOR_BLACK, COLOR_BLACK);
+        init_pair(BLUE_PAIR, COLOR_CYAN, COLOR_BLACK);
+        init_pair(RED_PAIR, COLOR_RED, COLOR_BLACK);
 
         bkgd(COLOR_PAIR(BASE_PAIR));
         clear();
