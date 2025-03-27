@@ -99,4 +99,4 @@ TEST(GraphTests, forEachEdge)
     }
 }
 
-#endif
+#endif // __GRAPH_TEST__

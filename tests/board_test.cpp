@@ -153,4 +153,4 @@ TEST(BoardTests, forEachPiece)
     board.forEachPiece(callback);
 }
 
-#endif
+#endif // __BOARD_TEST__
