@@ -44,11 +44,11 @@ public:
     std::vector<int> findShortestPath(int start, int end);
 
     /**
-     * Get the total distance of the last computed shortest path
+     * Check if two nodes are connected.
      *
-     * @return Total distance of the path
+     * @return Whether the nodes are connected.
      */
-    int getPathDistance() const;
+    bool nodesAreConnected(int start, int end);
 };
 
 #endif // DIJKSTRA_H

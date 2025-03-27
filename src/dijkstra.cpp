@@ -75,11 +75,12 @@ std::vector<int> Dijkstra::findShortestPath(int start, int end) {
 }
 
 /**
- * Get the total distance of the last computed shortest path
+ * Check if two nodes are connected.
  *
- * @return Total distance of the path
+ * @return Whether the nodes are connected.
  */
-int Dijkstra::getPathDistance() const {
-    // Assumes the last call to find shortest path used end node as index
-    return distances.empty() ? -1 : distances.back();
+bool Dijkstra::nodesAreConnected(int start, int end) {
+    std::vector<int> path = findShortestPath(start, end);
+
+    return path.size() > 0;
 }
