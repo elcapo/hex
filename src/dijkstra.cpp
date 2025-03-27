@@ -1,3 +1,4 @@
+#include "graph.hpp"
 #include "dijkstra.hpp"
 
 /**
@@ -50,17 +51,15 @@ std::vector<int> Dijkstra::findShortestPath(int start, int end) {
         visited[current] = true;
 
         graph.forEachEdgeFrom(current, [&](const Edge& edge) {
-            int neighbor = edge.to;
-            
-            if (visited[neighbor])
+            if (visited[edge.to])
                 return;
 
             int newDistance = distances[current] + 1;
 
-            if (newDistance < distances[neighbor]) {
-                distances[neighbor] = newDistance;
-                previous[neighbor] = current;
-                queue.push(neighbor);
+            if (newDistance < distances[edge.to]) {
+                distances[edge.to] = newDistance;
+                previous[edge.to] = current;
+                queue.push(edge.to);
             }
         });
     }
