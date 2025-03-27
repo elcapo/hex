@@ -94,33 +94,37 @@ void Window::renderColorMarkers()
 {
     startBlue();
 
-    mvwprintw(win,
-        BOARD_START_ROW + board.getY(BOARD_SIZE/2, 0),
-        BOARD_START_COL + board.getX(BOARD_SIZE/2, 0) - 2,
-        "B"
-    );
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        mvwprintw(win,
+            BOARD_START_ROW + board.getY(i, 0),
+            BOARD_START_COL + board.getX(i, 0) - 2,
+            "B"
+        );
 
-    mvwprintw(win,
-        BOARD_START_ROW + board.getY(BOARD_SIZE/2, 0),
-        BOARD_START_COL + board.getX(BOARD_SIZE/2, BOARD_SIZE - 1) + 2,
-        "B"
-    );
+        mvwprintw(win,
+            BOARD_START_ROW + board.getY(i, 0),
+            BOARD_START_COL + board.getX(i, BOARD_SIZE - 1) + 2,
+            "B"
+        );
+    }
 
     endBlue();
 
     startRed();
 
-    mvwprintw(win,
-        BOARD_START_ROW + board.getY(0, 0) - 1,
-        BOARD_START_COL + board.getX(0, BOARD_SIZE/2),
-        "R"
-    );
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        mvwprintw(win,
+            BOARD_START_ROW + board.getY(0, i) - 1,
+            BOARD_START_COL + board.getX(0, i),
+            "R"
+        );
 
-    mvwprintw(win,
-        BOARD_START_ROW + board.getY(BOARD_SIZE - 1, BOARD_SIZE/2) + 1,
-        BOARD_START_COL + board.getX(BOARD_SIZE - 1, BOARD_SIZE/2),
-        "R"
-    );
+        mvwprintw(win,
+            BOARD_START_ROW + board.getY(BOARD_SIZE - 1, i) + 1,
+            BOARD_START_COL + board.getX(BOARD_SIZE - 1, i),
+            "R"
+        );
+    }
 
     endRed();
 }
