@@ -46,4 +46,18 @@ TEST(DijkstraTests, getPathDistance) {
     ASSERT_EQ(dijkstra.getPathDistance(), 2);
 }
 
+TEST(DijkstraTests, impossiblePath) {
+    Graph graph(3, 3*2);
+
+    graph.bidirectedConnect(0, 1);
+
+    Dijkstra dijkstra(graph);
+
+    std::vector<int> shortestPath;
+
+    shortestPath = dijkstra.findShortestPath(0, 2);
+
+    ASSERT_EQ(shortestPath.size(), 0);
+}
+
 #endif // __DIJKSTRA_TEST__
