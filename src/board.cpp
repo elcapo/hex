@@ -204,8 +204,6 @@ const Graph& Board::getGraph() const {
  */
 void Board::forEachLine(std::function<void(const char* line)> callback) const
 {
-    const int& nodes = graph.countNodes();
-    const int size = static_cast<int>(sqrt(nodes));
     char line[128] = "";
     Turn piece;
 
