@@ -9,7 +9,6 @@
 int main()
 {
     Board board(BOARD_SIZE);
-    const Graph& graph = board.getGraph();
 
     int key, row, col;
 

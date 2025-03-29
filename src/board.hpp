@@ -83,8 +83,7 @@ public:
 };
 
 /**
- * The `Board` class models a board for the Hex game by implementing
- * it as a graph.
+ * The `Board` class models a board for the Hex game.
  */
 class Board
 {
@@ -101,42 +100,59 @@ private:
     // The opening position of the match
     Position opening;
 
-    // The graph that represents cells and their connections
-    Graph graph;
-
     // The piece positions at a given moment
     Positions positions;
+
+    // The graph that represents cells and their connections
+    Graph blueGraph;
+
+    // The graph that represents cells and their connections
+    Graph redGraph;
 
     /**
      * Passes the turn to the next player
      */
     void next();
+
+    /**
+     * Connect a blue movement with its surrounding blue positions.
+     *
+     * @param row The row number.
+     * @param col The column number.
+     */
+    void connectBlue(int row, int col);
+
+    /**
+     * Connect a red movement with its surrounding red positions.
+     *
+     * @param row The row number.
+     * @param col The column number.
+     */
+    void connectRed(int row, int col);
 public:
     Board(int size) :
         size(size),
         turn(Turn::Blue),
         movements(0),
         opening({-1, -1}),
-        graph(size*size, size*size*6),
+        blueGraph(size*size, size*size*6),
+        redGraph(size*size, size*size*6),
         positions(size)
     {
+        for (int col = 0; col < size; col++) {
+            if (exists(0, col + 1))
+                redGraph.connect(cell(0, col), cell(0, col + 1));
+
+            if (exists(size - 1, col + 1))
+                redGraph.connect(cell(size - 1, col), cell(size - 1, col + 1));
+        }
+
         for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                // Connect every cell with its right neighbour
-                if (exists(row, col + 1)) {
-                    graph.connect(cell(row, col), cell(row, col + 1));
-                }
+            if (exists(row + 1, 0))
+                blueGraph.connect(cell(row, 0), cell(row + 1, 0));
 
-                // Connect every cell with its bottom neighbour
-                if (exists(row + 1, col)) {
-                    graph.connect(cell(row, col), cell(row + 1, col));
-                }
-
-                // Connect every cell with its bottom-right neighbour
-                if (exists(row + 1, col + 1)) {
-                    graph.connect(cell(row, col), cell(row + 1, col + 1));
-                }
-            }
+            if (exists(row + 1, size - 1))
+                blueGraph.connect(cell(row, size - 1), cell(row + 1, size - 1));
         }
     };
 
@@ -196,6 +212,26 @@ public:
     const int& countMovements() const;
 
     /**
+     * Check if a position is owned by the blue player.
+     *
+     * @param row The row number.
+     * @param col The column number.
+     *
+     * @return True if the position is owned by the blue player.
+     */
+    bool isBlue(int row, int col);
+
+    /**
+     * Check if a position is owned by the red player.
+     *
+     * @param row The row number.
+     * @param col The column number.
+     *
+     * @return True if the position is owned by the red player.
+     */
+    bool isRed(int row, int col);
+
+    /**
      * Set the given cell with the color of the current player.
      *
      * @param row The row number.
@@ -218,11 +254,18 @@ public:
     void pieRule();
 
     /**
-     * Get a read only version of the graph.
+     * Get a read only version of the blue graph.
      *
-     * @return Read only pointer to the graph.
+     * @return Read only pointer to the blue graph.
      */
-    const Graph& getGraph() const;
+    const Graph& getBlueGraph() const;
+
+    /**
+     * Get a read only version of the red graph.
+     *
+     * @return Read only pointer to the red graph.
+     */
+    const Graph& getRedGraph() const;
 
     /**
      * Facilitate iterating over the lines of the board

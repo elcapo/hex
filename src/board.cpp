@@ -55,6 +55,54 @@ void Board::next()
 }
 
 /**
+ * Connect a blue movement with its surrounding blue positions.
+ *
+ * @param row The row number.
+ * @param col The column number.
+ */
+void Board::connectBlue(int row, int col)
+{
+    for (int r = -1; r <= 1; r++) {
+        for (int c = -1; c <= 1; c++) {
+            if (r == 0 && c == 0)
+                continue;
+
+            if (! exists(row + r, col + c))
+                continue;
+
+            if (! isBlue(row + r, col + c))
+                continue;
+
+            blueGraph.connect(cell(row, col), cell(row + r, col + c));
+        }
+    }
+}
+
+/**
+ * Connect a red movement with its surrounding red positions.
+ *
+ * @param row The row number.
+ * @param col The column number.
+ */
+void Board::connectRed(int row, int col)
+{
+    for (int r = -1; r <= 1; r++) {
+        for (int c = -1; c <= 1; c++) {
+            if (r == 0 && c == 0)
+                continue;
+
+            if (! exists(row + r, col + c))
+                continue;
+
+            if (! isRed(row + r, col + c))
+                continue;
+
+            redGraph.connect(cell(row, col), cell(row + r, col + c));
+        }
+    }
+}
+
+/**
  * Checks if a cell exists by its row and column numbers.
  *
  * Both the row and the column number are expected to be
@@ -132,6 +180,36 @@ const int& Board::countMovements() const
 }
 
 /**
+ * Check if a position is owned by the blue player.
+ *
+ * @param row The row number.
+ * @param col The column number.
+ *
+ * @return True if the position is owned by the blue player.
+ */
+bool Board::isBlue(int row, int col)
+{
+    Position position = std::make_pair(row, col);
+
+    return positions[position] == Turn::Blue;
+}
+
+/**
+ * Check if a position is owned by the red player.
+ *
+ * @param row The row number.
+ * @param col The column number.
+ *
+ * @return True if the position is owned by the red player.
+ */
+bool Board::isRed(int row, int col)
+{
+    Position position = std::make_pair(row, col);
+
+    return positions[position] == Turn::Red;
+}
+
+/**
  * Set the given cell with the color of the current player.
  *
  * @param row The row number.
@@ -139,17 +217,25 @@ const int& Board::countMovements() const
  */
 void Board::set(int row, int col)
 {
+    if (turn == Turn::Undecided)
+        throw std::runtime_error("The game already ended");
+
     Position position = std::make_pair(row, col);
 
-    if (positions[position] != Turn::Undecided) {
+    if (positions[position] != Turn::Undecided)
         throw std::invalid_argument("The cell has already been chosen");
-    }
 
-    if (opening.first == -1 || opening.second == -1) {
+    if (opening.first == -1 || opening.second == -1)
         opening = position;
-    }
 
     positions[position] = turn;
+
+    if (turn == Turn::Blue)
+        connectBlue(row, col);
+
+    if (turn == Turn::Red)
+        connectRed(row, col);
+
     next();
 }
 
@@ -186,12 +272,21 @@ void Board::pieRule()
 }
 
 /**
- * Get a read only version of the graph.
+ * Get a read only version of the blue graph.
  *
- * @return Read only pointer to the graph.
+ * @return Read only pointer to the blue graph.
  */
-const Graph& Board::getGraph() const {
-    return graph;
+const Graph& Board::getBlueGraph() const {
+    return blueGraph;
+}
+
+/**
+ * Get a read only version of the red graph.
+ *
+ * @return Read only pointer to the red graph.
+ */
+const Graph& Board::getRedGraph() const {
+    return redGraph;
 }
 
 /**
@@ -217,8 +312,6 @@ void Board::forEachLine(std::function<void(const char* line)> callback) const
         int pos = row * 2;
 
         for (int col = 0; col < size; col++) {
-            piece = get(row, col);
-
             line[pos++] = 'o';
             
             if (col + 1 < size) {
