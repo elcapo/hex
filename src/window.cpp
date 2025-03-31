@@ -58,7 +58,7 @@ void Window::printTitle()
 void Window::printHeader(int& row, int&col)
 {
     mvwprintw(win, 1, 2,
-        "Board (%dx%d) / Turn %4s / Movements %d / Row %2d, Col %2d / Memory allocations %2d",
+        "Board (%dx%d) / %s / Movements %d / Row %2d, Col %2d / Memory allocations %2d",
         BOARD_SIZE,
         BOARD_SIZE,
         turnAsLabel(board.current()).c_str(),
@@ -235,6 +235,9 @@ void Window::render(int& row, int&col)
 int Window::getKey(int& row, int&col)
 {
     int key = getch();
+
+    if (board.playerWon() != Turn::Undecided)
+        return key;
 
     if (key == KEY_LEFT) {
         if (col > 0)

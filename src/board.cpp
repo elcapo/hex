@@ -32,11 +32,11 @@ std::string turnAsLabel(const Turn& t)
 {
     switch (t) {
         case Blue:
-            return "Blue";
+            return "Blue plays";
         case Red:
-            return "Red";
+            return "Red plays";
         default:
-            return "Undecided";
+            return "Game finished";
     }
 }
 
@@ -47,7 +47,7 @@ void Board::next()
 {
     if (turn == Turn::Blue) {
         turn = Turn::Red;
-    } else {
+    } else if (turn == Turn::Red) {
         turn = Turn::Blue;
     }
 
@@ -210,6 +210,34 @@ bool Board::isRed(int row, int col)
 }
 
 /**
+ * Check if any of the player's already won.
+ */
+void Board::checkGame()
+{
+    if (blueDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
+        winner = Turn::Blue;
+        turn = Turn::Undecided;
+    }
+
+    if (redDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
+        winner = Turn::Red;
+        turn = Turn::Undecided;
+    }
+}
+
+/**
+ * Color of the player who won the game.
+ *
+ * @return Color of the player who won the game.
+ *         If the game hasn't finished yet, the
+ *         value "undecided" will be returned.
+ */
+Turn Board::playerWon()
+{
+    return winner;
+}
+
+/**
  * Set the given cell with the color of the current player.
  *
  * @param row The row number.
@@ -235,6 +263,8 @@ void Board::set(int row, int col)
 
     if (turn == Turn::Red)
         connectRed(row, col);
+
+    checkGame();
 
     next();
 }

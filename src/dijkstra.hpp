@@ -31,7 +31,7 @@ public:
      *
      * @param graph The graph to perform Dijkstra's algorithm on
      */
-    explicit Dijkstra(Graph& graph);
+    Dijkstra(Graph& graph);
 
     /**
      * Find the shortest path between two nodes

@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include "graph.hpp"
+#include "dijkstra.hpp"
 
 /**
  * The `Turn` enum contains the possible colors for each player.
@@ -94,6 +95,9 @@ private:
     // The color of the player that will do the next move
     Turn turn;
 
+    // The color of the player that won the game
+    Turn winner;
+
     // The number of movements that have been made
     int movements;
 
@@ -108,6 +112,12 @@ private:
 
     // The graph that represents cells and their connections
     Graph redGraph;
+
+    // Dijkstra algorithm ready to evaluate the blue graph
+    Dijkstra blueDijkstra;
+
+    // Dijkstra algorithm ready to evaluate the red graph
+    Dijkstra redDijkstra;
 
     /**
      * Passes the turn to the next player
@@ -133,10 +143,13 @@ public:
     Board(int size) :
         size(size),
         turn(Turn::Blue),
+        winner(Turn::Undecided),
         movements(0),
         opening({-1, -1}),
         blueGraph(size*size, size*size*6),
         redGraph(size*size, size*size*6),
+        blueDijkstra(blueGraph),
+        redDijkstra(redGraph),
         positions(size)
     {
         for (int col = 0; col < size; col++) {
@@ -230,6 +243,20 @@ public:
      * @return True if the position is owned by the red player.
      */
     bool isRed(int row, int col);
+
+    /**
+     * Check if any of the player's already won.
+     */
+    void checkGame();
+
+    /**
+     * Color of the player who won the game.
+     *
+     * @return Color of the player who won the game.
+     *         If the game hasn't finished yet, the
+     *         value "undecided" will be returned.
+     */
+    Turn playerWon();
 
     /**
      * Set the given cell with the color of the current player.

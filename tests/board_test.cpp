@@ -67,6 +67,18 @@ TEST(BoardTests, countMovements) {
     ASSERT_EQ(board.countMovements(), 3);
 }
 
+TEST(BoardTests, checkGame) {
+    Board board(3);
+
+    board.set(0, 0);
+    board.set(1, 0);
+    board.set(0, 1);
+    board.set(1, 1);
+    board.set(0, 2);
+
+    ASSERT_EQ(board.playerWon(), Turn::Blue);
+}
+
 TEST(BoardTests, set) {
     Board board(3);
 

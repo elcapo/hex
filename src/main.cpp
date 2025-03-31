@@ -3,20 +3,18 @@
 #include <iostream>
 #include <ncurses.h>
 #include "window.hpp"
+#include "dijkstra.hpp"
 #include "graph.hpp"
 #include "board.hpp"
 
 int main()
 {
     Board board(BOARD_SIZE);
-
-    int row, col;
-
-    row = 0;
-    col = 0;
-
     Window window(board);
     window.initialize();
+
+    int row = 0;
+    int col = 0;
 
     do {
         window.render(row, col);

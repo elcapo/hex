@@ -16,7 +16,7 @@
  *
  * @example If set to 11, the board will have 11 rows and 11 columns.
  */
-constexpr int BOARD_SIZE = 11;
+constexpr int BOARD_SIZE = 3;
 
 /**
  * Row and column of the window where the starting (top left)
