@@ -223,3 +223,38 @@ void Window::render(int& row, int&col)
 
     wrefresh(win);
 }
+
+/**
+ * Process the user key.
+ *
+ * @param row The row number.
+ * @param col The column number.
+ *
+ * @return Key pressed by the user.
+ */
+int Window::getKey(int& row, int&col)
+{
+    int key = getch();
+
+    if (key == KEY_LEFT) {
+        if (col > 0)
+            col--;
+    } else if (key == KEY_RIGHT) {
+        if (col < BOARD_SIZE - 1)
+            col++;
+    } else if (key == KEY_UP) {
+        if (row > 0)
+            row--;
+    } else if (key == KEY_DOWN) {
+        if (row < BOARD_SIZE - 1)
+            row++;
+    } else if (key == ' ') {
+        if (board.get(row, col) == Turn::Undecided)
+            board.set(row, col);
+    } else if (key == 'p') {
+        if (board.countMovements() == 1)
+            board.pieRule();
+    }
+
+    return key;
+}

@@ -102,6 +102,16 @@ public:
      * Render the game window.
      */
     void render(int& row, int&col);
+
+    /**
+     * Process the user key.
+     *
+     * @param row The row number.
+     * @param col The column number.
+     *
+     * @return Key pressed by the user.
+     */
+    int getKey(int& row, int&col);
 };
 
 #endif // WINDOW_H
