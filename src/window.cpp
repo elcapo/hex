@@ -5,11 +5,18 @@
  * made while building the program.
  */
 static int allocations = 0;
+static int deallocations = 0;
 
 void* operator new(size_t size)
 {
     allocations++;
     return malloc(size);
+}
+
+void operator delete(void* ptr)
+{
+    deallocations++;
+    free(ptr);
 }
 
 /**
@@ -58,14 +65,15 @@ void Window::printTitle()
 void Window::printHeader(int& row, int&col)
 {
     mvwprintw(win, 1, 2,
-        "Board (%dx%d) / %s / Movements %d / Row %2d, Col %2d / Memory allocations %2d",
+        "Board (%2dx%2d) / %15s / Movements %3d / Row %2d, Col %2d / Memory allocations (+%d, -%d)",
         BOARD_SIZE,
         BOARD_SIZE,
         turnAsLabel(board.current()).c_str(),
         board.countMovements(),
         row + 1,
         col + 1,
-        allocations
+        allocations,
+        deallocations
     );
 }
 
