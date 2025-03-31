@@ -6,12 +6,23 @@
  *
  * @param graph The graph to perform Dijkstra's algorithm on
  */
-Dijkstra::Dijkstra(Graph& graph) : graph(graph) {
+Dijkstra::Dijkstra(Graph& graph) : graph(graph), comparator() {
     int nodeCount = graph.countNodes();
 
     distances.resize(nodeCount, std::numeric_limits<int>::max());
     previous.resize(nodeCount, -1);
     visited.resize(nodeCount, false);
+
+    std::pair<int, int> distancePair = std::make_pair(0, -1);
+    queueContainer.resize(nodeCount, distancePair);
+
+    queue = std::priority_queue<
+        std::pair<int, int>,
+        std::vector<std::pair<int, int>>,
+        DistanceCompare>(comparator, std::move(queueContainer));
+
+    int edgeCount = graph.countEdges();
+    path.resize(edgeCount);
 }
 
 /**
@@ -33,13 +44,14 @@ std::vector<int> Dijkstra::findShortestPath(int start, int end) {
     std::fill(previous.begin(), previous.end(), -1);
     std::fill(visited.begin(), visited.end(), false);
 
-    std::priority_queue<int, std::vector<int>, DistanceCompare> queue((DistanceCompare(distances)));
-    
-    distances[start] = 0;
-    queue.push(start);
+    queueContainer.clear();
 
-    while (!queue.empty()) {
-        int current = queue.top();
+    distances[start] = 0;
+
+    queue.push(std::make_pair(0, start));
+
+    while (! queue.empty()) {
+        int current = queue.top().second;
         queue.pop();
 
         if (current == end)
@@ -59,12 +71,12 @@ std::vector<int> Dijkstra::findShortestPath(int start, int end) {
             if (newDistance < distances[edge.to]) {
                 distances[edge.to] = newDistance;
                 previous[edge.to] = current;
-                queue.push(edge.to);
+                queue.push(std::make_pair(newDistance, edge.to));
             }
         });
     }
 
-    std::vector<int> path;
+    path.clear();
     for (int at = end; at != -1; at = previous[at]) {
         path.push_back(at);
     }

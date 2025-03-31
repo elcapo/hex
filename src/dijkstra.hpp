@@ -15,16 +15,21 @@ private:
     std::vector<int> distances;
     std::vector<int> previous;
     std::vector<bool> visited;
+    std::vector<int> path;
+    std::vector<std::pair<int, int>> queueContainer;
 
-    // Custom comparator for priority queue to avoid repeated allocations
     struct DistanceCompare {
-        const std::vector<int>& dist;
-        DistanceCompare(const std::vector<int>& distances) : dist(distances) {}
-        
-        bool operator()(int a, int b) const {
-            return dist[a] > dist[b];
+        bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
+            return a.first > b.first;
         }
     };
+
+    DistanceCompare comparator;
+
+    std::priority_queue<
+        std::pair<int, int>,
+        std::vector<std::pair<int, int>>,
+        DistanceCompare> queue;
 public:
     /**
      * Constructor that preallocates memory based on graph size
