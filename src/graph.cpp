@@ -131,9 +131,8 @@ const int Graph::countEdges() const
  */
 void Graph::forEachEdgeFrom(int node, std::function<void(const Edge&)> callback) const
 {
-    for (int edge = limits[node].head; edge != -1; edge = connections[edge].next) {
+    for (int edge = limits[node].head; edge != -1; edge = connections[edge].next)
         callback(Edge(node, connections[edge].target));
-    }
 }
 
 /**
@@ -141,9 +140,8 @@ void Graph::forEachEdgeFrom(int node, std::function<void(const Edge&)> callback)
  */
 void Graph::forEachEdge(std::function<void(const Edge&)> callback) const
 {
-    for (int node = 0; node < nodes; ++node) {
+    for (int node = 0; node < nodes; ++node)
         forEachEdgeFrom(node, callback);
-    }
 }
 
 /**
