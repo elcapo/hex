@@ -62,20 +62,23 @@ void Board::next()
  */
 void Board::connectBlue(int row, int col)
 {
-    for (int r = -1; r <= 1; r++) {
-        for (int c = -1; c <= 1; c++) {
-            if (r == 0 && c == 0)
-                continue;
+    if (exists(row - 1, col) && isBlue(row - 1, col))
+        blueGraph.connect(cell(row, col), cell(row - 1, col));
 
-            if (! exists(row + r, col + c))
-                continue;
+    if (exists(row - 1, col + 1) && isBlue(row - 1, col + 1))
+        blueGraph.connect(cell(row, col), cell(row - 1, col + 1));
 
-            if (! isBlue(row + r, col + c))
-                continue;
+    if (exists(row, col - 1) && isBlue(row, col - 1))
+        blueGraph.connect(cell(row, col), cell(row, col - 1));
 
-            blueGraph.connect(cell(row, col), cell(row + r, col + c));
-        }
-    }
+    if (exists(row, col + 1) && isBlue(row, col + 1))
+        blueGraph.connect(cell(row, col), cell(row, col + 1));
+
+    if (exists(row + 1, col - 1) && isBlue(row + 1, col - 1))
+        blueGraph.connect(cell(row, col), cell(row + 1, col - 1));
+
+    if (exists(row + 1, col) && isBlue(row + 1, col))
+        blueGraph.connect(cell(row, col), cell(row + 1, col));
 }
 
 /**
@@ -86,20 +89,23 @@ void Board::connectBlue(int row, int col)
  */
 void Board::connectRed(int row, int col)
 {
-    for (int r = -1; r <= 1; r++) {
-        for (int c = -1; c <= 1; c++) {
-            if (r == 0 && c == 0)
-                continue;
+    if (exists(row - 1, col) && isRed(row - 1, col))
+        redGraph.connect(cell(row, col), cell(row - 1, col));
 
-            if (! exists(row + r, col + c))
-                continue;
+    if (exists(row - 1, col + 1) && isRed(row - 1, col + 1))
+        redGraph.connect(cell(row, col), cell(row - 1, col + 1));
 
-            if (! isRed(row + r, col + c))
-                continue;
+    if (exists(row, col - 1) && isRed(row, col - 1))
+        redGraph.connect(cell(row, col), cell(row, col - 1));
 
-            redGraph.connect(cell(row, col), cell(row + r, col + c));
-        }
-    }
+    if (exists(row, col + 1) && isRed(row, col + 1))
+        redGraph.connect(cell(row, col), cell(row, col + 1));
+
+    if (exists(row + 1, col - 1) && isRed(row + 1, col - 1))
+        redGraph.connect(cell(row, col), cell(row + 1, col - 1));
+
+    if (exists(row + 1, col) && isRed(row + 1, col))
+        redGraph.connect(cell(row, col), cell(row + 1, col));
 }
 
 /**
