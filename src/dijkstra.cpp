@@ -52,12 +52,13 @@ std::vector<int> Dijkstra::findShortestPath(int start, int end) {
 
     while (! queue.empty()) {
         int current = queue.top().second;
+
         queue.pop();
 
         if (current == end)
             break;
 
-        if (visited[current])
+        if (current == -1 || visited[current])
             continue;
 
         visited[current] = true;
