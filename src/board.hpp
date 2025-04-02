@@ -139,6 +139,11 @@ private:
      * @param col The column number.
      */
     void connectRed(int row, int col);
+
+    /**
+     * Check if any of the player's already won.
+     */
+    void checkGame();
 public:
     /**
      * Basic constructor of a board.
@@ -185,7 +190,7 @@ public:
      * @param row The row number.
      * @param col The column number.
      *
-     * @return A number for each cell in a range from 0 to size-1.
+     * @return A number for each cell in a range from 0 to pow(size, 2)-1.
      *         Also can return -1, if the cell does not exist.
      */
     int cell(int row, int col) const;
@@ -223,11 +228,6 @@ public:
      * @return True if the position is owned by the red player.
      */
     bool isRed(int row, int col);
-
-    /**
-     * Check if any of the player's already won.
-     */
-    void checkGame();
 
     /**
      * Color of the player who won the game.

@@ -37,6 +37,7 @@ TEST(BoardTests, cell) {
     ASSERT_EQ(board.cell(0, 0), 0);
     ASSERT_EQ(board.cell(0, 1), 1);
     ASSERT_EQ(board.cell(1, 1), 4);
+    ASSERT_EQ(board.cell(2, 2), 8);
 }
 
 TEST(BoardTests, current) {
@@ -67,7 +68,26 @@ TEST(BoardTests, countMovements) {
     ASSERT_EQ(board.countMovements(), 3);
 }
 
-TEST(BoardTests, checkGame) {
+TEST(BoardTests, isBlue) {
+    Board board(3);
+
+    board.set(1, 1);
+
+    ASSERT_EQ(board.isBlue(0, 0), false);
+    ASSERT_EQ(board.isBlue(1, 1), true);
+}
+
+TEST(BoardTests, isRed) {
+    Board board(3);
+
+    board.set(0, 0);
+    board.set(1, 1);
+
+    ASSERT_EQ(board.isRed(0, 0), false);
+    ASSERT_EQ(board.isRed(1, 1), true);
+}
+
+TEST(BoardTests, playerWon) {
     Board board(3);
 
     board.set(0, 0);
@@ -110,6 +130,32 @@ TEST(BoardTests, pieRule) {
 
     ASSERT_EQ(board.get(1, 1), Turn::Red);
     ASSERT_EQ(board.current(), Turn::Blue);
+}
+
+TEST(BoardTests, getBlueGraph) {
+    Board board(3);
+
+    board.set(0, 0);
+    board.set(1, 1);
+    board.set(0, 1);
+    board.set(1, 2);
+
+    Graph blueGraph = board.getBlueGraph();
+
+    ASSERT_EQ(blueGraph.nodesAreConnected(0, 1), true);
+}
+
+TEST(BoardTests, getRedGraph) {
+    Board board(3);
+
+    board.set(0, 0);
+    board.set(1, 1);
+    board.set(0, 1);
+    board.set(1, 2);
+
+    Graph redGraph = board.getRedGraph();
+
+    ASSERT_EQ(redGraph.nodesAreConnected(4, 5), true);
 }
 
 TEST(BoardTests, forEachLine)

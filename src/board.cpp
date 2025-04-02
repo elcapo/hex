@@ -108,6 +108,19 @@ void Board::connectRed(int row, int col)
         redGraph.connect(cell(row, col), cell(row + 1, col));
 }
 
+void Board::checkGame()
+{
+    if (blueDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
+        winner = Turn::Blue;
+        turn = Turn::Undecided;
+    }
+
+    if (redDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
+        winner = Turn::Red;
+        turn = Turn::Undecided;
+    }
+}
+
 bool Board::exists(int row, int col) const
 {
     return row >= 0 && row < size && col >= 0 && col < size;
@@ -154,19 +167,6 @@ bool Board::isRed(int row, int col)
     Position position = std::make_pair(row, col);
 
     return positions[position] == Turn::Red;
-}
-
-void Board::checkGame()
-{
-    if (blueDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
-        winner = Turn::Blue;
-        turn = Turn::Undecided;
-    }
-
-    if (redDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
-        winner = Turn::Red;
-        turn = Turn::Undecided;
-    }
 }
 
 Turn Board::playerWon()
