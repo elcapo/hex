@@ -140,34 +140,14 @@ private:
      */
     void connectRed(int row, int col);
 public:
-    Board(int size) :
-        size(size),
-        turn(Turn::Blue),
-        winner(Turn::Undecided),
-        movements(0),
-        opening({-1, -1}),
-        blueGraph(size*size, size*size*6),
-        redGraph(size*size, size*size*6),
-        blueDijkstra(blueGraph),
-        redDijkstra(redGraph),
-        positions(size)
-    {
-        for (int col = 0; col < size; col++) {
-            if (exists(0, col + 1))
-                redGraph.connect(cell(0, col), cell(0, col + 1));
-
-            if (exists(size - 1, col + 1))
-                redGraph.connect(cell(size - 1, col), cell(size - 1, col + 1));
-        }
-
-        for (int row = 0; row < size; row++) {
-            if (exists(row + 1, 0))
-                blueGraph.connect(cell(row, 0), cell(row + 1, 0));
-
-            if (exists(row + 1, size - 1))
-                blueGraph.connect(cell(row, size - 1), cell(row + 1, size - 1));
-        }
-    };
+    /**
+     * Basic constructor of a board.
+     *
+     * @param size Size of the size of the board.
+     *
+     * @example Set size to 11 for a 11x11 board.
+     */
+    Board(int size);
 
     /**
      * Checks if a cell exists by its row and column numbers.
