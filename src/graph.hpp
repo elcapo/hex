@@ -60,6 +60,11 @@ private:
 
     // Edge targets and their next siblings
     std::vector<NodeConnection> connections;
+
+    /**
+     * If necessary, allocates more memory when connections are created.
+     */
+    void reserveIfNeeded();
 public:
     /**
      * Constructor for the Graph class.
@@ -68,11 +73,6 @@ public:
      * @param edgeCapacity Preallocated number of edges.
      */
     Graph(int nodes, int edgeCapacity);
-
-    /**
-     * If necessary, allocates more memory when connections are created.
-     */
-    void reserveIfNeeded();
 
     /**
      * Connects two nodes with an edge.
