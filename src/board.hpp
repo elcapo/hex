@@ -155,6 +155,13 @@ public:
     Board(int size);
 
     /**
+     * Creates a deep copy of the board with its current state.
+     * 
+     * @return A new Board object that is a complete copy of this board.
+     */
+    Board clone() const;
+
+    /**
      * Checks if a cell exists by its row and column numbers.
      *
      * Both the row and the column number are expected to be

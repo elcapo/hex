@@ -55,6 +55,38 @@ Board::Board(int size) :
     }
 };
 
+Board Board::clone() const
+{
+    Board copy(size);
+    
+    copy.turn = turn;
+    copy.winner = winner;
+    copy.movements = movements;
+    copy.opening = opening;
+    
+    for (int row = 0; row < size; row++) {
+        for (int col = 0; col < size; col++) {
+            Position position = std::make_pair(row, col);
+            if (positions[position] != Turn::Undecided) {
+                copy.positions[position] = positions[position];
+            }
+        }
+    }
+    
+    for (int row = 0; row < size; row++) {
+        for (int col = 0; col < size; col++) {
+            Position position = std::make_pair(row, col);
+            if (positions[position] == Turn::Blue) {
+                copy.connectBlue(row, col);
+            } else if (positions[position] == Turn::Red) {
+                copy.connectRed(row, col);
+            }
+        }
+    }
+    
+    return copy;
+}
+
 void Board::next()
 {
     if (turn == Turn::Blue) {

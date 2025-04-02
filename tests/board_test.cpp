@@ -4,6 +4,23 @@
 #include <gtest/gtest.h>
 #include "../src/board.cpp"
 
+TEST(BoardTests, copy) {
+    Board board(3);
+
+    board.set(1, 1);
+    board.pieRule();
+    board.set(1, 2);
+
+    Board copy = board.clone();
+
+    ASSERT_EQ(board.exists(0, 0), true);
+    ASSERT_EQ(board.exists(9, 9), false);
+    ASSERT_EQ(board.isRed(0, 0), false);
+    ASSERT_EQ(board.isBlue(0, 0), false);
+    ASSERT_EQ(board.isRed(1, 1), true);
+    ASSERT_EQ(board.isBlue(1, 2), true);
+}
+
 TEST(BoardTests, exists) {
     Board board(3);
 
