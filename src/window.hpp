@@ -38,16 +38,12 @@ public:
      * @param board Board that will be printed and used
      *              to control the game.
      */
-    Window(Board& board) : board(board) {
-        win = nullptr;
-    }
+    Window(Board& board);
 
     /**
      * Destructor of the window object.
      */
-    ~Window() {
-        endwin();
-    }
+    ~Window();
 
     /**
      * Activate the blue color.
