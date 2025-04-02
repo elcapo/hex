@@ -19,6 +19,14 @@ void operator delete(void* ptr)
     free(ptr);
 }
 
+Window::Window(Board& board) : board(board) {
+    win = nullptr;
+}
+
+Window::~Window() {
+    endwin();
+}
+
 /**
  * Activate the blue color.
  */

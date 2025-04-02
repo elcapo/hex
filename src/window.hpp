@@ -32,10 +32,19 @@ private:
     WINDOW* win;
     Board& board;
 public:
+    /**
+     * Constructor of the windows object.
+     *
+     * @param board Board that will be printed and used
+     *              to control the game.
+     */
     Window(Board& board) : board(board) {
         win = nullptr;
     }
 
+    /**
+     * Destructor of the window object.
+     */
     ~Window() {
         endwin();
     }
