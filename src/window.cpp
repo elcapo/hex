@@ -27,49 +27,31 @@ Window::~Window() {
     endwin();
 }
 
-/**
- * Activate the blue color.
- */
 void Window::startBlue()
 {
     wattron(win, COLOR_PAIR(BLUE_PAIR));
 }
 
-/**
- * Deactivate the blue color.
- */
 void Window::endBlue()
 {
     wattroff(win, COLOR_PAIR(BLUE_PAIR));
 }
 
-/**
- * Activate the red color.
- */
 void Window::startRed()
 {
     wattron(win, COLOR_PAIR(RED_PAIR));
 }
 
-/**
- * Deactivate the blue color.
- */
 void Window::endRed()
 {
     wattroff(win, COLOR_PAIR(RED_PAIR));
 }
 
-/**
- * Print the title of the window.
- */
 void Window::printTitle()
 {
     mvwprintw(win, 0, 2, " The Zig-Zag Game ");
 }
 
-/**
- * Print the header of the window.
- */
 void Window::printHeader(int& row, int&col)
 {
     mvwprintw(win, 1, 2,
@@ -85,9 +67,6 @@ void Window::printHeader(int& row, int&col)
     );
 }
 
-/**
- * Print the footer of the window.
- */
 void Window::printFooter()
 {
     if (board.countMovements() == 1) {
@@ -102,10 +81,6 @@ void Window::printFooter()
     mvwprintw(win, LINES-2, 2, "Press `q` to quit.");    
 }
 
-/**
- * Render the marks that indicate which side corresponds to
- * each player.
- */
 void Window::renderColorMarkers()
 {
     startBlue();
@@ -145,10 +120,6 @@ void Window::renderColorMarkers()
     endRed();
 }
 
-/**
- * Render the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
 void Window::renderBoard()
 {
     int row = BOARD_START_ROW;
@@ -159,10 +130,6 @@ void Window::renderBoard()
     });
 }
 
-/**
- * Render the pieces of the board in the given window starting at the
- * position given by BOARD_START_ROW and BOARD_START_COL.
- */
 void Window::renderPieces()
 {
     board.forEachPiece([this](const int row, const int col, Turn turn) {
@@ -192,9 +159,6 @@ void Window::renderPieces()
     });
 }
 
-/**
- * Initialize the screen.
- */
 void Window::initialize()
 {
     initscr();
@@ -220,9 +184,6 @@ void Window::initialize()
     wrefresh(win);
 }
 
-/**
- * Render the game window.
- */
 void Window::render(int& row, int&col)
 {
     printHeader(row, col);
@@ -240,14 +201,6 @@ void Window::render(int& row, int&col)
     wrefresh(win);
 }
 
-/**
- * Process the user key.
- *
- * @param row The row number.
- * @param col The column number.
- *
- * @return Key pressed by the user.
- */
 int Window::getKey(int& row, int&col)
 {
     int key = getch();
