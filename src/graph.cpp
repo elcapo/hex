@@ -1,5 +1,9 @@
 #include "graph.hpp"
 
+Graph::Graph(int nodes, int edgeCapacity) : nodes(nodes), edgeCapacity(edgeCapacity), limits(nodes, {-1, -1}) {
+    connections.reserve(edgeCapacity);
+}
+
 void Graph::reserveIfNeeded()
 {
     if (edgeCapacity == countEdges()) {

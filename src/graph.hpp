@@ -63,10 +63,11 @@ private:
 public:
     /**
      * Constructor for the Graph class.
+     *
+     * @param nodes Number of nodes.
+     * @param edgeCapacity Preallocated number of edges.
      */
-    Graph(int nodes, int edgeCapacity) : nodes(nodes), edgeCapacity(edgeCapacity), limits(nodes, {-1, -1}) {
-        connections.reserve(edgeCapacity);
-    }
+    Graph(int nodes, int edgeCapacity);
 
     /**
      * If necessary, allocates more memory when connections are created.
