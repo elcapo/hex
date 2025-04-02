@@ -4,13 +4,6 @@
 #include <gtest/gtest.h>
 #include "../src/graph.cpp"
 
-TEST(GraphTests, countNodes) {
-    int nodes = 3*3;
-    Graph graph(nodes, nodes*6);
-
-    ASSERT_EQ(graph.countNodes(), nodes);
-}
-
 TEST(GraphTests, connect) {
     int nodes = 3*3;
     Graph graph(nodes, nodes*6);
@@ -53,6 +46,23 @@ TEST(GraphTests, nodesAreConnected) {
     ASSERT_EQ(graph.nodesAreConnected(1, 0), true);
     ASSERT_EQ(graph.nodesAreConnected(1, 2), true);
     ASSERT_EQ(graph.nodesAreConnected(2, 1), false);
+}
+
+TEST(GraphTests, countNodes) {
+    int nodes = 3*3;
+    Graph graph(nodes, nodes*6);
+
+    ASSERT_EQ(graph.countNodes(), nodes);
+}
+
+TEST(GraphTests, countEdges) {
+    int nodes = 3*3;
+    Graph graph(nodes, nodes*6);
+
+    graph.directedConnect(0, 1);
+    graph.directedConnect(0, 2);
+
+    ASSERT_EQ(graph.countEdges(), 2);
 }
 
 TEST(GraphTests, forEachEdgeFrom)
