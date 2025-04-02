@@ -1,11 +1,6 @@
 #include "graph.hpp"
 #include "dijkstra.hpp"
 
-/**
- * Constructor that preallocates memory based on graph size
- *
- * @param graph The graph to perform Dijkstra's algorithm on
- */
 Dijkstra::Dijkstra(Graph& graph) : graph(graph), comparator() {
     int nodeCount = graph.countNodes();
 
@@ -25,14 +20,6 @@ Dijkstra::Dijkstra(Graph& graph) : graph(graph), comparator() {
     path.resize(edgeCount);
 }
 
-/**
- * Find the shortest path between two nodes
- *
- * @param start Starting node
- * @param end Destination node
- *
- * @return Vector of nodes representing the shortest path
- */
 std::vector<int> Dijkstra::findShortestPath(int start, int end) {
     int nodeCount = graph.countNodes();
 
@@ -87,11 +74,6 @@ std::vector<int> Dijkstra::findShortestPath(int start, int end) {
     return (path[0] == start) ? path : std::vector<int>();
 }
 
-/**
- * Check if two nodes are connected.
- *
- * @return Whether the nodes are connected.
- */
 bool Dijkstra::nodesAreConnected(int start, int end) {
     std::vector<int> path = findShortestPath(start, end);
 
