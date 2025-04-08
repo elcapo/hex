@@ -28,10 +28,22 @@ To create the binary files for your platform, run the `compile` script.
 
 The compilation will generate the binary files inside the `build` folder, with preserving the file structure.
 
-To execute the program, run the `execute` script.
+Once compiled, to execute the program, run the `execute` script.
 
 ```bash
 ./execute
+```
+
+By default, you'll play the **blue** user. If you want to play the red user, you can run:
+
+```bash
+./execute --red
+```
+
+In case you want to play a manual game, you can run:
+
+```bash
+./execute --blue --red
 ```
 
 ## Test
