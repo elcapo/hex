@@ -64,7 +64,7 @@ private:
     /**
      * If necessary, allocates more memory when connections are created.
      */
-    void reserveIfNeeded();
+    void adjust();
 public:
     /**
      * Constructor for the Graph class.

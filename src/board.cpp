@@ -1,5 +1,8 @@
+#include <algorithm>
 #include <iostream>
 #include <cmath>
+#include <random>
+#include "ai.hpp"
 #include "board.hpp"
 
 const char* turnAsChar(const Turn& t)
@@ -26,17 +29,7 @@ std::string turnAsLabel(const Turn& t)
     }
 }
 
-Board::Board(int size) :
-    size(size),
-    turn(Turn::Blue),
-    winner(Turn::Undecided),
-    movements(0),
-    opening({-1, -1}),
-    blueGraph(size*size, size*size*6),
-    redGraph(size*size, size*size*6),
-    blueDijkstra(blueGraph),
-    redDijkstra(redGraph),
-    positions(size)
+void Board::connectBorders()
 {
     for (int col = 0; col < size; col++) {
         if (exists(0, col + 1))
@@ -53,38 +46,60 @@ Board::Board(int size) :
         if (exists(row + 1, size - 1))
             blueGraph.connect(cell(row, size - 1), cell(row + 1, size - 1));
     }
+}
+
+Board::Board(int size, HumanPlayers humanPlayers) :
+    size(size),
+    humanPlayers(humanPlayers),
+    turn(Turn::Blue),
+    winner(Turn::Undecided),
+    movements(0),
+    opening({-1, -1}),
+    blueGraph(size*size, size*size*6),
+    redGraph(size*size, size*size*6),
+    positions(size)
+{
+    connectBorders();
+
+    if (turn == Turn::Blue && ! humanPlayers.blue)
+        playBlueMove();
 };
 
-Board Board::clone() const
+Board& Board::operator=(const Board& other)
 {
-    Board copy(size);
-    
-    copy.turn = turn;
-    copy.winner = winner;
-    copy.movements = movements;
-    copy.opening = opening;
-    
-    for (int row = 0; row < size; row++) {
-        for (int col = 0; col < size; col++) {
-            Position position = std::make_pair(row, col);
-            if (positions[position] != Turn::Undecided) {
-                copy.positions[position] = positions[position];
-            }
-        }
+    if (this == &other) {
+        return *this;
     }
-    
+
+    size = other.size;
+    humanPlayers = HumanPlayers({true, true});
+    turn = other.turn;
+    winner = other.winner;
+    movements = other.movements;
+    opening = other.opening;
+
+    blueGraph = Graph(size*size, size*size*6);
+    redGraph = Graph(size*size, size*size*6);
+
+    connectBorders();
+
+    positions = Positions(size);
+
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
             Position position = std::make_pair(row, col);
+            positions[position] = other.positions[position];
+            
             if (positions[position] == Turn::Blue) {
-                copy.connectBlue(row, col);
-            } else if (positions[position] == Turn::Red) {
-                copy.connectRed(row, col);
+                connectBlue(row, col);
+            }
+            else if (positions[position] == Turn::Red) {
+                connectRed(row, col);
             }
         }
     }
     
-    return copy;
+    return *this;
 }
 
 void Board::next()
@@ -96,6 +111,12 @@ void Board::next()
     }
 
     movements++;
+
+    if (turn == Turn::Blue && ! humanPlayers.blue) {
+        playBlueMove();
+    } else if (turn == Turn::Red && ! humanPlayers.red) {
+        playRedMove();
+    }
 }
 
 void Board::connectBlue(int row, int col)
@@ -140,12 +161,40 @@ void Board::connectRed(int row, int col)
         redGraph.connect(cell(row, col), cell(row + 1, col));
 }
 
+void Board::playBlueMove()
+{
+    Ai blueAi(Turn::Blue);
+    blueAi.readBoard(*this);
+
+    for (int i = 0; i <= 100; i++)
+        blueAi.simulate();
+
+    Position bluePosition = blueAi.getBestPosition();
+    set(bluePosition.first, bluePosition.second);
+}
+
+void Board::playRedMove()
+{
+    Ai redAi(Turn::Red);
+    redAi.readBoard(*this);
+
+    for (int i = 0; i <= 100; i++)
+        redAi.simulate();
+
+    Position redPosition = redAi.getBestPosition();
+    set(redPosition.first, redPosition.second);
+}
+
 void Board::checkGame()
 {
+    Dijkstra blueDijkstra(blueGraph);
+
     if (blueDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
         winner = Turn::Blue;
         turn = Turn::Undecided;
     }
+
+    Dijkstra redDijkstra(redGraph);
 
     if (redDijkstra.nodesAreConnected(cell(0, 0), cell(size - 1, size - 1))) {
         winner = Turn::Red;
@@ -156,6 +205,11 @@ void Board::checkGame()
 bool Board::exists(int row, int col) const
 {
     return row >= 0 && row < size && col >= 0 && col < size;
+}
+
+int Board::getSize() const
+{
+    return size;
 }
 
 int Board::getY(int row, int col) const
@@ -206,7 +260,7 @@ Turn Board::playerWon()
     return winner;
 }
 
-void Board::set(int row, int col)
+void Board::set(int row, int col, bool checkWinner)
 {
     if (turn == Turn::Undecided)
         throw std::runtime_error("The game already ended");
@@ -227,7 +281,8 @@ void Board::set(int row, int col)
     if (turn == Turn::Red)
         connectRed(row, col);
 
-    checkGame();
+    if (checkWinner)
+        checkGame();
 
     next();
 }
@@ -325,6 +380,33 @@ void Board::forEachPiece(std::function<void(const int row, const int col, Turn t
             position = std::make_pair(i, j);
             if (positions[position] != Turn::Undecided)
                 callback(i, j, positions[position]);
+        }
+    }
+}
+
+void Board::forEachEmptyPosition(std::function<void(const int row, const int col)> callback) const
+{
+    int rowIds[size];
+    int colIds[size];
+
+    for (int i = 0; i < size; ++i) {
+        rowIds[i] = i;
+        colIds[i] = i;
+    }
+
+    std::random_device random_device;
+    std::mt19937 twister(random_device());
+    std::shuffle(rowIds, rowIds + size, twister);
+    std::shuffle(colIds, colIds + size, twister);
+
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            int row = rowIds[i];
+            int col = colIds[j];
+            Position position = std::make_pair(row, col);
+
+            if (positions[position] == Turn::Undecided)
+                callback(row, col);
         }
     }
 }

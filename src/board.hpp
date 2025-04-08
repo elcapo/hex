@@ -7,6 +7,15 @@
 #include "dijkstra.hpp"
 
 /**
+ * The `HumanPlayers` struct indicates what players are human.
+ */
+struct HumanPlayers
+{
+    bool blue;
+    bool red;
+};
+
+/**
  * The `Turn` enum contains the possible colors for each player.
  */
 enum Turn { Undecided = 0, Blue = 1, Red = 2 };
@@ -58,7 +67,7 @@ typedef std::pair<int, int> Position;
 /**
  * The `Positions` class is used to store the positions of the pieces.
  */
-constexpr int MAX_BOARD_SIZE = 16;
+constexpr int MAX_BOARD_SIZE = 23;
 
 class Positions {
 private:
@@ -67,11 +76,7 @@ private:
 
 public:
     Positions(int size) : size(size) {
-        for (int i = 0; i < size; ++i) {
-            for (int j = 0; j < size; ++j) {
-                positions[i][j] = Turn::Undecided;
-            }
-        }
+        std::fill(positions[0], positions[0] + (MAX_BOARD_SIZE * MAX_BOARD_SIZE), Turn::Undecided);
     }
 
     Turn& operator[](const Position& position) {
@@ -91,6 +96,9 @@ class Board
 private:
     // The number of rows and also the number of columns
     int size;
+
+    // The humans playing the game
+    HumanPlayers humanPlayers;
 
     // The color of the player that will do the next move
     Turn turn;
@@ -113,11 +121,10 @@ private:
     // The graph that represents cells and their connections
     Graph redGraph;
 
-    // Dijkstra algorithm ready to evaluate the blue graph
-    Dijkstra blueDijkstra;
-
-    // Dijkstra algorithm ready to evaluate the red graph
-    Dijkstra redDijkstra;
+    /**
+     * Connect the borders of each graph.
+     */
+    void connectBorders();
 
     /**
      * Passes the turn to the next player
@@ -141,25 +148,40 @@ private:
     void connectRed(int row, int col);
 
     /**
-     * Check if any of the player's already won.
+     * Let the AI play a blue move.
      */
-    void checkGame();
+    void playBlueMove();
+
+    /**
+     * Let the AI play a red move.
+     */
+    void playRedMove();
+
 public:
     /**
      * Basic constructor of a board.
      *
      * @param size Size of the size of the board.
+     * @param humanPlayers Humans playing the game.
      *
      * @example Set size to 11 for a 11x11 board.
      */
-    Board(int size);
+    Board(int size, HumanPlayers humanPlayers);
 
     /**
-     * Creates a deep copy of the board with its current state.
+     * Assignment operator to allow copying one board to another. Copying boards
+     * always results in a copy with AI disabled.
      * 
-     * @return A new Board object that is a complete copy of this board.
+     * @param other The board to copy from.
+     *
+     * @return Reference to this board after assignment.
      */
-    Board clone() const;
+    Board& operator=(const Board& other);
+
+    /**
+     * Check if any of the player's already won.
+     */
+    void checkGame();
 
     /**
      * Checks if a cell exists by its row and column numbers.
@@ -173,6 +195,13 @@ public:
      * @return Whether the cell exists or not.
      */
     bool exists(int row, int col) const;
+
+    /**
+     * Get the size of the board.
+     *
+     * @return Board size.
+     */
+    int getSize() const;
 
     /**
      * Get the row number of the rendered board that corresponds
@@ -250,8 +279,9 @@ public:
      *
      * @param row The row number.
      * @param col The column number.
+     * @param checkWinner Whether to check who won after the movement (default: true).
      */
-    void set(int row, int col);
+    void set(int row, int col, bool checkWinner=true);
 
     /**
      * Get the color of a given cell.
@@ -300,6 +330,15 @@ public:
      *        with the corresponding piece.
      */
     void forEachPiece(std::function<void(const int row, const int col, Turn turn)> callback) const;
+
+    /**
+     * Facilitate iterating over the empty positions of the board
+     * in order to fill them in Monte Carlo simulations.
+     *
+     * @param callback Function that will be called back
+     *        with the corresponding empty position.
+     */
+    void forEachEmptyPosition(std::function<void(const int row, const int col)> callback) const;
 
     /**
      * Override the << operator in order to facilitate streaming the

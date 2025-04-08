@@ -1,8 +1,12 @@
 #include "graph.hpp"
 #include "dijkstra.hpp"
 
-Dijkstra::Dijkstra(Graph& graph) : graph(graph), comparator() {
+void Dijkstra::adjust()
+{
     int nodeCount = graph.countNodes();
+
+    if (distances.capacity() >= nodeCount)
+        return;
 
     distances.resize(nodeCount, std::numeric_limits<int>::max());
     previous.resize(nodeCount, -1);
@@ -18,6 +22,22 @@ Dijkstra::Dijkstra(Graph& graph) : graph(graph), comparator() {
 
     int edgeCount = graph.countEdges();
     path.resize(edgeCount);
+}
+
+Dijkstra::Dijkstra(Graph& graph) : graph(graph), comparator() {
+    adjust();
+}
+
+Dijkstra& Dijkstra::operator=(const Dijkstra& other)
+{
+    if (this == &other) {
+        return *this;
+    }
+
+    graph = other.graph;
+    adjust();
+
+    return *this;
 }
 
 std::vector<int> Dijkstra::findShortestPath(int start, int end) {

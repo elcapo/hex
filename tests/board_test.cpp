@@ -2,34 +2,53 @@
 #define __BOARD_TEST__
 
 #include <gtest/gtest.h>
+#include <unordered_set>
+#include <utility>
 #include "../src/board.cpp"
 
+struct pair_hash {
+    template <class T1, class T2>
+    std::size_t operator() (const std::pair<T1, T2> &pair) const {
+        return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+    }
+};
+
 TEST(BoardTests, copy) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(1, 1);
     board.pieRule();
     board.set(1, 2);
 
-    Board copy = board.clone();
+    Board copy = board;
 
-    ASSERT_EQ(board.exists(0, 0), true);
-    ASSERT_EQ(board.exists(9, 9), false);
-    ASSERT_EQ(board.isRed(0, 0), false);
-    ASSERT_EQ(board.isBlue(0, 0), false);
-    ASSERT_EQ(board.isRed(1, 1), true);
-    ASSERT_EQ(board.isBlue(1, 2), true);
+    ASSERT_EQ(copy.exists(0, 0), true);
+    ASSERT_EQ(copy.exists(9, 9), false);
+    ASSERT_EQ(copy.isRed(0, 0), false);
+    ASSERT_EQ(copy.isBlue(0, 0), false);
+    ASSERT_EQ(copy.isRed(1, 1), true);
+    ASSERT_EQ(copy.isBlue(1, 2), true);
 }
 
 TEST(BoardTests, exists) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.exists(0, 0), true);
     ASSERT_EQ(board.exists(9, 9), false);
 }
 
+TEST(BoardTests, getSize) {
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
+
+    ASSERT_EQ(board.getSize(), 3);
+}
+
 TEST(BoardTests, getY) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.getY(0, 0), 0);
     ASSERT_EQ(board.getY(0, 1), 0);
@@ -39,7 +58,8 @@ TEST(BoardTests, getY) {
 }
 
 TEST(BoardTests, getX) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.getX(0, 0), 0);
     ASSERT_EQ(board.getX(0, 1), 4);
@@ -49,7 +69,8 @@ TEST(BoardTests, getX) {
 }
 
 TEST(BoardTests, cell) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.cell(0, 0), 0);
     ASSERT_EQ(board.cell(0, 1), 1);
@@ -58,7 +79,8 @@ TEST(BoardTests, cell) {
 }
 
 TEST(BoardTests, current) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.current(), Turn::Blue);
 
@@ -68,7 +90,8 @@ TEST(BoardTests, current) {
 }
 
 TEST(BoardTests, countMovements) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.countMovements(), 0);
 
@@ -86,7 +109,8 @@ TEST(BoardTests, countMovements) {
 }
 
 TEST(BoardTests, isBlue) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(1, 1);
 
@@ -95,7 +119,8 @@ TEST(BoardTests, isBlue) {
 }
 
 TEST(BoardTests, isRed) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(0, 0);
     board.set(1, 1);
@@ -105,7 +130,8 @@ TEST(BoardTests, isRed) {
 }
 
 TEST(BoardTests, playerWon) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(0, 0);
     board.set(1, 0);
@@ -117,7 +143,8 @@ TEST(BoardTests, playerWon) {
 }
 
 TEST(BoardTests, set) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(1, 1);
 
@@ -125,7 +152,8 @@ TEST(BoardTests, set) {
 }
 
 TEST(BoardTests, get) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.get(1, 1), Turn::Undecided);
 
@@ -135,7 +163,8 @@ TEST(BoardTests, get) {
 }
 
 TEST(BoardTests, pieRule) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     ASSERT_EQ(board.current(), Turn::Blue);
 
@@ -150,7 +179,8 @@ TEST(BoardTests, pieRule) {
 }
 
 TEST(BoardTests, getBlueGraph) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(0, 0);
     board.set(1, 1);
@@ -163,7 +193,8 @@ TEST(BoardTests, getBlueGraph) {
 }
 
 TEST(BoardTests, getRedGraph) {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(0, 0);
     board.set(1, 1);
@@ -177,7 +208,8 @@ TEST(BoardTests, getRedGraph) {
 
 TEST(BoardTests, forEachLine)
 {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     int i = 0;
 
@@ -200,7 +232,8 @@ TEST(BoardTests, forEachLine)
 
 TEST(BoardTests, forEachPiece)
 {
-    Board board(3);
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
 
     board.set(1, 1);
     board.pieRule();
@@ -226,6 +259,44 @@ TEST(BoardTests, forEachPiece)
     };
 
     board.forEachPiece(callback);
+}
+
+TEST(BoardTests, forEachEmptyPosition)
+{
+    HumanPlayers humanPlayers = {true, true};
+    Board board(3, humanPlayers);
+
+    board.set(1, 1);
+    board.pieRule();
+    board.set(2, 1);
+
+    std::unordered_set<std::pair<int, int>, pair_hash> expectedPositions;
+
+    expectedPositions.insert({0, 0});
+    expectedPositions.insert({0, 1});
+    expectedPositions.insert({0, 2});
+    expectedPositions.insert({1, 0});
+    expectedPositions.insert({1, 2});
+    expectedPositions.insert({2, 0});
+    expectedPositions.insert({2, 2});
+
+    std::unordered_set<std::pair<int, int>, pair_hash> visitedPositions;
+
+    board.forEachEmptyPosition([&visitedPositions](const int row, const int col) {
+        visitedPositions.insert({row, col});
+    });
+
+    EXPECT_EQ(visitedPositions.size(), expectedPositions.size());
+}
+
+
+TEST(BoardTests, aiPlayer)
+{
+    HumanPlayers humanPlayers = {true, false};
+    Board board(3, humanPlayers);
+
+    board.set(1, 1);
+    ASSERT_EQ(board.countMovements(), 2);
 }
 
 #endif // __BOARD_TEST__

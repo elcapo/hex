@@ -30,6 +30,11 @@ private:
         std::pair<int, int>,
         std::vector<std::pair<int, int>>,
         DistanceCompare> queue;
+
+    /**
+     * Adjust the container sizes.
+     */
+    void adjust();
 public:
     /**
      * Constructor that preallocates memory based on graph size
@@ -37,6 +42,15 @@ public:
      * @param graph The graph to perform Dijkstra's algorithm on
      */
     Dijkstra(Graph& graph);
+
+    /**
+     * Assignment operator to allow copying one graph to another.
+     * 
+     * @param other The graph to copy from.
+     *
+     * @return Reference to this graph after assignment.
+     */
+    Dijkstra& operator=(const Dijkstra& other);
 
     /**
      * Find the shortest path between two nodes

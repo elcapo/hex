@@ -1,11 +1,12 @@
 #include "graph.hpp"
 
-void Graph::reserveIfNeeded()
+void Graph::adjust()
 {
-    if (edgeCapacity == countEdges()) {
-        edgeCapacity = edgeCapacity * edgeCapacity/2;
-        connections.reserve(edgeCapacity);
-    }
+    if (connections.capacity() >= countEdges())
+        return;
+
+    edgeCapacity = edgeCapacity * edgeCapacity/2;
+    connections.reserve(edgeCapacity);
 }
 
 Graph::Graph(int nodes, int edgeCapacity) : nodes(nodes), edgeCapacity(edgeCapacity), limits(nodes, {-1, -1}) {
@@ -14,7 +15,7 @@ Graph::Graph(int nodes, int edgeCapacity) : nodes(nodes), edgeCapacity(edgeCapac
 
 void Graph::connect(int from, int to, bool bidirectional)
 {
-    reserveIfNeeded();
+    adjust();
 
     if (from < 0 || from > nodes) {
         throw std::out_of_range(
