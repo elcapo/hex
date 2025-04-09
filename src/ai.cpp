@@ -39,7 +39,7 @@ void BoardEvaluation::deactivate(int row, int col)
 
 Position BoardEvaluation::getBestPosition()
 {
-    int bestValue = 0;
+    int bestValue = positions[0][0];
     Position bestPosition = {0, 0};
 
     for (int i = 0; i < size; ++i) {

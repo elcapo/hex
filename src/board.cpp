@@ -112,6 +112,9 @@ void Board::next()
 
     movements++;
 
+    if (playerWon() != Turn::Undecided)
+        return;
+
     if (turn == Turn::Blue && ! humanPlayers.blue) {
         playBlueMove();
     } else if (turn == Turn::Red && ! humanPlayers.red) {

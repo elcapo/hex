@@ -72,8 +72,8 @@ public:
      */
     Ai(Turn player) :
         player(player),
-        board(Board(1, HumanPlayers({true, true}))),
-        evaluation(BoardEvaluation(1))
+        board(Board(MAX_BOARD_SIZE, HumanPlayers({true, true}))),
+        evaluation(BoardEvaluation(MAX_BOARD_SIZE))
     {}
 
     /**
