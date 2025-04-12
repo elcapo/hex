@@ -402,11 +402,13 @@ void Board::forEachEmptyPosition(std::function<void(const int row, const int col
     std::shuffle(rowIds, rowIds + size, twister);
     std::shuffle(colIds, colIds + size, twister);
 
+    Position position = std::make_pair(rowIds[0], colIds[0]);
+
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
             int row = rowIds[i];
             int col = colIds[j];
-            Position position = std::make_pair(row, col);
+            position = std::make_pair(row, col);
 
             if (positions[position] == Turn::Undecided)
                 callback(row, col);
