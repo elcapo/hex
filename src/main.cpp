@@ -7,6 +7,7 @@
 #include "dijkstra.hpp"
 #include "graph.hpp"
 #include "board.hpp"
+#include "strategy.hpp"
 
 HumanPlayers readArguments(int argc, char *argv[])
 {
@@ -31,6 +32,15 @@ int main(int argc, char *argv[])
     HumanPlayers humanPlayers = readArguments(argc, argv);
 
     Board board(BOARD_SIZE, humanPlayers);
+    
+    if (!humanPlayers.blue) {
+        board.setStrategy(Turn::Blue, std::make_unique<AIStrategy>(Turn::Blue));
+    }
+
+    if (!humanPlayers.red) {
+        board.setStrategy(Turn::Red, std::make_unique<AIStrategy>(Turn::Red));
+    }
+    
     Window window(board);
     window.initialize();
 

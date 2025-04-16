@@ -1,13 +1,19 @@
 #ifndef AI_H
 #define AI_H
 
+#include <limits>
+#include <utility>
+#include "common.hpp"
 #include "board.hpp"
+
+// Forward declarations
+typedef std::pair<int, int> Position;
 
 class BoardEvaluation
 {
 private:
     int size;
-    int positions[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
+    int positions[23][23] = {0}; // Usar una constante explícita en lugar de MAX_BOARD_SIZE
 
 public:
     /**
@@ -59,6 +65,8 @@ public:
     Position getBestPosition();
 };
 
+bool flipCoin();
+
 class Ai
 {
 private:
@@ -70,11 +78,7 @@ public:
     /**
      * Create an AI instance.
      */
-    Ai(Turn player) :
-        player(player),
-        board(Board(MAX_BOARD_SIZE, HumanPlayers({true, true}))),
-        evaluation(BoardEvaluation(MAX_BOARD_SIZE))
-    {}
+    Ai(Turn player);
 
     /**
      * Read an external board state.

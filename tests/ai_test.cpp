@@ -2,7 +2,7 @@
 #define __AI_TEST__
 
 #include <gtest/gtest.h>
-#include "../src/ai.cpp"
+#include "../src/ai.hpp"
 
 TEST(AiTests, getScore) {
     BoardEvaluation evaluation(9);

@@ -15,6 +15,12 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     unit_test
     unit_test.cpp
+    ../src/common.cpp
+    ../src/strategy.cpp
+    ../src/board.cpp
+    ../src/ai.cpp
+    ../src/dijkstra.cpp
+    ../src/graph.cpp
 )
 
 target_link_libraries(

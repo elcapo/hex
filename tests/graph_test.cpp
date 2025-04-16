@@ -2,7 +2,7 @@
 #define __GRAPH_TEST__
 
 #include <gtest/gtest.h>
-#include "../src/graph.cpp"
+#include "../src/graph.hpp"
 
 TEST(GraphTests, connect) {
     int nodes = 3*3;

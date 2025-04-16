@@ -2,32 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <random>
-#include "ai.hpp"
 #include "board.hpp"
-
-const char* turnAsChar(const Turn& t)
-{
-    switch (t) {
-        case Blue:
-            return "B";
-        case Red:
-            return "R";
-        default:
-            return "o";
-    }
-}
-
-std::string turnAsLabel(const Turn& t)
-{
-    switch (t) {
-        case Blue:
-            return "Blue plays";
-        case Red:
-            return "Red plays";
-        default:
-            return "Game finished";
-    }
-}
+#include "strategy.hpp"
 
 void Board::connectBorders()
 {
@@ -54,16 +30,49 @@ Board::Board(int size, HumanPlayers humanPlayers) :
     turn(Turn::Blue),
     winner(Turn::Undecided),
     movements(0),
-    opening({-1, -1}),
+    opening(std::make_pair(-1, -1)),
     blueGraph(size*size, size*size*6),
     redGraph(size*size, size*size*6),
-    positions(size)
+    positions(size),
+    blueStrategy(nullptr),
+    redStrategy(nullptr)
 {
     connectBorders();
 
-    if (turn == Turn::Blue && ! humanPlayers.blue)
+    if (turn == Turn::Blue && !humanPlayers.blue)
         playBlueMove();
-};
+}
+
+Board::Board(const Board& other) :
+    size(other.size),
+    humanPlayers({true, true}), // Siempre crear copias con jugadores humanos
+    turn(other.turn),
+    winner(other.winner),
+    movements(other.movements),
+    opening(other.opening),
+    blueGraph(other.size*other.size, other.size*other.size*6),
+    redGraph(other.size*other.size, other.size*other.size*6),
+    positions(other.size),
+    blueStrategy(nullptr),
+    redStrategy(nullptr)
+{
+    connectBorders();
+
+    // Copiar todas las posiciones
+    for (int row = 0; row < size; row++) {
+        for (int col = 0; col < size; col++) {
+            Position position = std::make_pair(row, col);
+            positions[position] = other.positions[position];
+            
+            if (positions[position] == Turn::Blue) {
+                connectBlue(row, col);
+            }
+            else if (positions[position] == Turn::Red) {
+                connectRed(row, col);
+            }
+        }
+    }
+}
 
 Board& Board::operator=(const Board& other)
 {
@@ -99,7 +108,19 @@ Board& Board::operator=(const Board& other)
         }
     }
     
+    // No copiar las estrategias
+    blueStrategy = nullptr;
+    redStrategy = nullptr;
+    
     return *this;
+}
+
+void Board::setStrategy(Turn player, std::unique_ptr<MoveStrategy> strategy) {
+    if (player == Turn::Blue) {
+        blueStrategy = std::move(strategy);
+    } else if (player == Turn::Red) {
+        redStrategy = std::move(strategy);
+    }
 }
 
 void Board::next()
@@ -115,9 +136,9 @@ void Board::next()
     if (playerWon() != Turn::Undecided)
         return;
 
-    if (turn == Turn::Blue && ! humanPlayers.blue) {
+    if (turn == Turn::Blue && !humanPlayers.blue) {
         playBlueMove();
-    } else if (turn == Turn::Red && ! humanPlayers.red) {
+    } else if (turn == Turn::Red && !humanPlayers.red) {
         playRedMove();
     }
 }
@@ -164,28 +185,45 @@ void Board::connectRed(int row, int col)
         redGraph.connect(cell(row, col), cell(row + 1, col));
 }
 
+void Board::playComputerMove()
+{
+    Position position;
+    
+    if (turn == Turn::Blue && blueStrategy != nullptr) {
+        position = blueStrategy->getNextMove(*this);
+    } else if (turn == Turn::Red && redStrategy != nullptr) {
+        position = redStrategy->getNextMove(*this);
+    } else {
+        return; // No strategy available for current player
+    }
+    
+    set(position.first, position.second);
+}
+
 void Board::playBlueMove()
 {
-    Ai blueAi(Turn::Blue);
-    blueAi.readBoard(*this);
-
-    for (int i = 0; i <= 100; i++)
-        blueAi.simulate();
-
-    Position bluePosition = blueAi.getBestPosition();
-    set(bluePosition.first, bluePosition.second);
+    if (blueStrategy != nullptr) {
+        // Usar la estrategia configurada
+        playComputerMove();
+    } else {
+        // Estrategia por defecto (crear una AIStrategy temporal)
+        AIStrategy tempStrategy(Turn::Blue);
+        Position position = tempStrategy.getNextMove(*this);
+        set(position.first, position.second);
+    }
 }
 
 void Board::playRedMove()
 {
-    Ai redAi(Turn::Red);
-    redAi.readBoard(*this);
-
-    for (int i = 0; i <= 100; i++)
-        redAi.simulate();
-
-    Position redPosition = redAi.getBestPosition();
-    set(redPosition.first, redPosition.second);
+    if (redStrategy != nullptr) {
+        // Usar la estrategia configurada
+        playComputerMove();
+    } else {
+        // Estrategia por defecto (crear una AIStrategy temporal)
+        AIStrategy tempStrategy(Turn::Red);
+        Position position = tempStrategy.getNextMove(*this);
+        set(position.first, position.second);
+    }
 }
 
 void Board::checkGame()

@@ -3,40 +3,15 @@
 
 #include <string>
 #include <cstring>
+#include <memory>
+#include <utility> // para std::pair
 #include "graph.hpp"
 #include "dijkstra.hpp"
+#include "common.hpp"
+#include "strategy.hpp"
 
-/**
- * The `HumanPlayers` struct indicates what players are human.
- */
-struct HumanPlayers
-{
-    bool blue;
-    bool red;
-};
-
-/**
- * The `Turn` enum contains the possible colors for each player.
- */
-enum Turn { Undecided = 0, Blue = 1, Red = 2 };
-
-/**
- * Get a given turn as a single character.
- *
- * @return 'B' for Turn::Blue
- *         'R' for Turn::Red
- *         '·' otherwise
- */
-const char* turnAsChar(const Turn& t);
-
-/**
- * Get a given turn as a printable label.
- *
- * @return 'Blue' for Turn::Blue
- *         'Red' for Turn::Red
- *         'Undecided' for Turn::Undecided
- */
-std::string turnAsLabel(const Turn& t);
+// Forward declarations
+class MoveStrategy;
 
 /**
  * Custom hash function for int.
@@ -58,11 +33,6 @@ struct PairHash {
         return h1 ^ (h2 << 1);
     }
 };
-
-/**
- * The `Position` type is used to store a reference to a cell.
- */
-typedef std::pair<int, int> Position;
 
 /**
  * The `Positions` class is used to store the positions of the pieces.
@@ -121,6 +91,10 @@ private:
     // The graph that represents cells and their connections
     Graph redGraph;
 
+    // Strategies for computer players
+    std::unique_ptr<MoveStrategy> blueStrategy;
+    std::unique_ptr<MoveStrategy> redStrategy;
+
     /**
      * Connect the borders of each graph.
      */
@@ -148,6 +122,11 @@ private:
     void connectRed(int row, int col);
 
     /**
+     * Let the computer play a move using the strategy pattern.
+     */
+    void playComputerMove();
+
+    /**
      * Let the AI play a blue move.
      */
     void playBlueMove();
@@ -169,6 +148,13 @@ public:
     Board(int size, HumanPlayers humanPlayers);
 
     /**
+     * Copy constructor for Board. Note that strategies are not copied.
+     * 
+     * @param other The board to copy from.
+     */
+    Board(const Board& other);
+
+    /**
      * Assignment operator to allow copying one board to another. Copying boards
      * always results in a copy with AI disabled.
      * 
@@ -177,6 +163,14 @@ public:
      * @return Reference to this board after assignment.
      */
     Board& operator=(const Board& other);
+
+    /**
+     * Set the strategy for the computer player.
+     * 
+     * @param player The player to set the strategy for.
+     * @param strategy The strategy to use.
+     */
+    void setStrategy(Turn player, std::unique_ptr<MoveStrategy> strategy);
 
     /**
      * Check if any of the player's already won.

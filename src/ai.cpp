@@ -1,5 +1,6 @@
 #include <limits>
 #include "ai.hpp"
+#include "board.hpp"
 
 bool flipCoin() {
     return rand() > (RAND_MAX / 2);
@@ -57,6 +58,12 @@ Position BoardEvaluation::getBestPosition()
 
     return bestPosition;
 }
+
+Ai::Ai(Turn player) :
+    player(player),
+    board(Board(23, {true, true})), // Usar una constante explícita en lugar de MAX_BOARD_SIZE
+    evaluation(BoardEvaluation(23))
+{}
 
 void Ai::readBoard(const Board& externalBoard)
 {

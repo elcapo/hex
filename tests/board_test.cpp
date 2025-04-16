@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <unordered_set>
 #include <utility>
-#include "../src/board.cpp"
+#include "../src/board.hpp"
 
 struct pair_hash {
     template <class T1, class T2>
@@ -294,6 +294,7 @@ TEST(BoardTests, aiPlayer)
 {
     HumanPlayers humanPlayers = {true, false};
     Board board(3, humanPlayers);
+    board.setStrategy(Turn::Red, std::make_unique<AIStrategy>(Turn::Red));
 
     board.set(1, 1);
     ASSERT_EQ(board.countMovements(), 2);

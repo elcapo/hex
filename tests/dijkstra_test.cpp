@@ -2,7 +2,7 @@
 #define __DIJKSTRA_TEST__
 
 #include <gtest/gtest.h>
-#include "../src/dijkstra.cpp"
+#include "../src/dijkstra.hpp"
 
 TEST(DijkstraTests, findShortestPath) {
     int nodes = 3*3;
